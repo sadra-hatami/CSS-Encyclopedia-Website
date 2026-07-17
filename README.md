@@ -3,9 +3,9 @@
 # CSS Encyclopedia
 # 📚🎨📚
 
-### A Comprehensive Persian CSS Reference & Learning Platform
+### A Comprehensive Persian CSS Learning & Reference Platform
 
-A complete Persian encyclopedia covering CSS from fundamentals to advanced concepts, including selectors, properties, Flexbox, Grid, animations, responsive design, modern CSS features, practical examples, and beginner-friendly explanations.
+Master CSS through a complete Persian encyclopedia featuring modern CSS concepts, practical examples, responsive design techniques, Flexbox, Grid, animations, visual effects, and beginner-friendly explanations—all in one interactive website.
 
 <br>
 
@@ -22,15 +22,22 @@ A complete Persian encyclopedia covering CSS from fundamentals to advanced conce
 ![Cross Platform](https://img.shields.io/badge/Cross--Platform-Desktop%20%7C%20Laptop%20%7C%20Tablet%20%7C%20Mobile-6f42c1?style=for-the-badge)
 ![GitHub](https://img.shields.io/badge/Open_Source-Project-black?style=for-the-badge\&logo=github)
 
+<br>
+
+[🌐 Live Demo](https://sadra-hatami.github.io/CSS-Encyclopedia-Website/) •
+[📧 Contact](mailto:sadra.hatami.1732@gmail.com)
+
 </div>
 
 ---
 
 # 📖 About
 
-**CSS Encyclopedia Website** is a comprehensive Persian educational platform created to simplify learning CSS for beginners while serving as a practical reference for more experienced developers.
+**CSS Encyclopedia Website** is a comprehensive Persian educational platform created to simplify learning CSS while serving as a practical reference for web developers.
 
-The encyclopedia covers modern CSS concepts through detailed explanations, practical examples, responsive design techniques, Flexbox, Grid, animations, visual effects, and browser compatibility, making it suitable for both learning and everyday development.
+The project covers everything from the fundamentals of CSS to advanced styling techniques, including selectors, properties, layouts, animations, responsive design, Flexbox, Grid, modern CSS features, and practical code examples.
+
+Designed with a modern user interface, the encyclopedia provides an organized learning experience suitable for both beginners and experienced front-end developers.
 
 ---
 
@@ -38,14 +45,14 @@ The encyclopedia covers modern CSS concepts through detailed explanations, pract
 
 * 🎨 Comprehensive CSS reference
 * 📚 Beginner-friendly explanations
-* 🧩 CSS selectors and properties
+* 🧩 Detailed CSS selectors and properties
 * 📦 Flexbox & CSS Grid
-* ✨ Animations & transitions
-* 📱 Responsive Web Design
-* 🌙 Modern cyber-inspired UI
-* 💻 Interactive code examples
-* 📖 Offline documentation
-* 🚀 Optimized user experience
+* ✨ Animations, transitions & visual effects
+* 📱 Responsive Web Design concepts
+* 💻 Practical code examples
+* 🌙 Modern cyber-inspired interface
+* 🚀 Fast browser-based experience
+* 🇮🇷 Complete Persian educational content
 
 ---
 
@@ -53,8 +60,8 @@ The encyclopedia covers modern CSS concepts through detailed explanations, pract
 
 * Make CSS easier to learn.
 * Provide a complete Persian CSS reference.
-* Help developers write cleaner and more modern CSS.
-* Combine theory with practical examples.
+* Bridge theory and practical development.
+* Help developers write cleaner and more modern stylesheets.
 
 ---
 
@@ -72,13 +79,29 @@ The encyclopedia covers modern CSS concepts through detailed explanations, pract
 * Front-end developers
 * Students
 * Programming instructors
-* Anyone learning CSS
+* Anyone interested in modern CSS
+
+---
+
+# 🌐 Live Demo
+
+https://sadra-hatami.github.io/CSS-Encyclopedia-Website/
+
+---
+
+# 📬 Contact
+
+**Developer**
+
+**Sadra Hatami**
+
+📧 [sadra.hatami.1732@gmail.com](mailto:sadra.hatami.1732@gmail.com)
 
 ---
 
 # 📄 License
 
-MIT License
+Licensed under the **MIT License**.
 
 ---
 
@@ -88,7 +111,7 @@ MIT License
 
 All rights reserved.
 
-The source code, educational content, website design, documentation, and project structure are protected by copyright.
+The source code, educational content, website design, user interface, documentation, and project structure are protected by copyright.
 
 ---
 
@@ -96,7 +119,7 @@ The source code, educational content, website design, documentation, and project
 
 If this project helped you, please consider giving it a ⭐ on GitHub.
 
-Your support helps improve future educational projects.
+Your support encourages future educational projects and open-source development.
 
 ---
 
