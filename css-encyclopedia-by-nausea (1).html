@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="دایره‌المعارف کامل CSS — از صفر تا صد؛ تمام مفاهیم، ویژگی‌ها، سلکتورها، Flexbox، Grid، انیمیشن، ریسپانسیو و موارد پیشرفته با مثال و توضیح مبتدی‌فهم">
+<meta name="author" content="صدرا حاتمی | Sadra Hatami">
+<meta name="theme-color" content="#0a0e1a">
+<title>دایره‌المعارف کامل CSS</title>
+<style>
+/* ════════════════════════════════════════════════════════════
+   متغیرهای رنگی — تم Neo-Dark Cyberpunk Pro
+   ════════════════════════════════════════════════════════════ */
+:root {
+  --bg-deep:      #070b16;
+  --bg-deep-2:    #0a0e1a;
+  --bg-panel:     #0e1424;
+  --bg-panel-2:   #141b2e;
+  --bg-glass:     #141b2e8c;
+  --bg-code:      #0b1020;
+  --border:       #1c2740;
+  --border-2:     #2a3a5e;
+
+  --neon-cyan:    #22d3ee;
+  --neon-pink:    #f472b6;
+  --neon-purple:  #a78bfa;
+  --neon-blue:    #60a5fa;
+  --neon-yellow:  #fbbf24;
+  --neon-green:   #34d399;
+  --neon-orange:  #fb923c;
+  --neon-red:     #f87171;
+
+  --text-main:    #dce3f0;
+  --text-dim:     #8896b0;
+  --text-bright:  #f8fafc;
+
+  --radius:       16px;
+  --radius-sm:    10px;
+  --glow-cyan:    0 0 25px rgba(34, 211, 238, 0.25);
+  --glow-purple:  0 0 25px rgba(167, 139, 250, 0.25);
+  --shadow-card:  0 8px 30px rgba(0,0,0,0.3);
+  --font-main:    'Vazirmatn', 'Vazir', 'Segoe UI', Tahoma, sans-serif;
+  --font-code:    'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+/* ── تم روشن (Light Theme) ── */
+html[data-theme="light"] {
+  --bg-deep:      #eef1f8;
+  --bg-deep-2:    #e3e8f3;
+  --bg-panel:     #ffffff;
+  --bg-panel-2:   #f1f4fb;
+  --bg-glass:     rgba(255, 255, 255, 0.7);
+  --bg-code:      #f5f7fc;
+  --border:       #d4dbea;
+  --border-2:     #b9c4dc;
+
+  --neon-cyan:    #0891b2;
+  --neon-pink:    #db2777;
+  --neon-purple:  #7c3aed;
+  --neon-blue:    #2563eb;
+  --neon-yellow:  #b45309;
+  --neon-green:   #059669;
+  --neon-orange:  #ea580c;
+  --neon-red:     #dc2626;
+
+  --text-main:    #1e293b;
+  --text-dim:     #5b677d;
+  --text-bright:  #0a0e1a;
+
+  --glow-cyan:    0 0 20px rgba(8, 145, 178, 0.18);
+  --glow-purple:  0 0 20px rgba(124, 58, 237, 0.18);
+  --shadow-card:  0 8px 28px rgba(40, 60, 110, 0.12);
+}
+
+/* ════════════════════════════════════════════════════════════
+   ریست
+   ════════════════════════════════════════════════════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; overflow-x: hidden; max-width: 100%; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-deep);
+  color: var(--text-main);
+  line-height: 1.95;
+  font-size: 16px;
+  overflow-x: hidden;
+  position: relative;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* پس‌زمینه چندلایه پویا */
+.bg-fx {
+  position: fixed; inset: 0; z-index: -3; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(167, 139, 250, 0.15), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(34, 211, 238, 0.1), transparent),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(244, 114, 182, 0.08), transparent),
+    var(--bg-deep);
+  transition: background 0.4s ease;
+}
+.bg-grid {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 40%, transparent 90%);
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 40%, transparent 90%);
+}
+/* ذرات شناور */
+.particle {
+  position: fixed; border-radius: 50%; z-index: -1; pointer-events: none;
+  background: var(--neon-cyan); opacity: 0.4;
+  animation: float-up linear infinite;
+  box-shadow: 0 0 8px currentColor;
+}
+@keyframes float-up {
+  from { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.5; }
+  to   { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   اسکرول‌بار
+   ════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg-deep-2); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--neon-cyan), var(--neon-purple));
+  border-radius: 10px; border: 3px solid var(--bg-deep-2);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
+::selection { background: rgba(34, 211, 238, 0.3); color: var(--text-bright); }
+
+/* ════════════════════════════════════════════════════════════
+   چیدمان
+   ════════════════════════════════════════════════════════════ */
+.layout { display: flex; min-height: 100vh; }
+
+/* ----- نوار کناری ----- */
+.sidebar {
+  width: 330px;
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  position: fixed; top: 0; right: 0; bottom: 0;
+  overflow-y: auto; z-index: 100;
+  padding: 0 0 40px;
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+  backdrop-filter: blur(10px);
+}
+.sidebar-top {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--bg-panel);
+  padding: 22px 18px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-brand {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 1.35rem; font-weight: 800;
+  margin-bottom: 16px;
+}
+.sidebar-brand .logo {
+  font-size: 1.9rem;
+  filter: drop-shadow(0 0 10px var(--neon-cyan));
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse { 50% { filter: drop-shadow(0 0 18px var(--neon-cyan)); } }
+.brand-text {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.brand-sub { font-size: 0.65rem; color: var(--text-dim); font-weight: 400; display:block; }
+
+/* جعبه جستجو */
+.search-box { position: relative; }
+.search-box input {
+  width: 100%;
+  background: var(--bg-code);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  padding: 10px 38px 10px 14px;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.search-box input:focus {
+  outline: none; border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+.search-box .s-icon {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-dim); pointer-events: none;
+}
+.search-count {
+  font-size: 0.7rem; color: var(--neon-cyan); padding: 6px 4px 0; display: none;
+}
+
+.nav-scroll { padding: 8px 14px; }
+.nav-section-title {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--neon-cyan); padding: 18px 12px 8px;
+  font-weight: 700; opacity: 0.85;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+.nav-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; color: var(--text-dim);
+  text-decoration: none; border-radius: 10px;
+  font-size: 0.88rem; transition: all 0.2s ease;
+  margin-bottom: 2px; border-right: 3px solid transparent;
+}
+.nav-link:hover {
+  background: var(--bg-panel-2); color: var(--text-bright);
+  border-right-color: var(--neon-cyan); transform: translateX(-5px);
+}
+.nav-link.active {
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.14));
+  color: var(--neon-cyan); border-right-color: var(--neon-cyan);
+}
+.nav-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 28px; height: 28px; font-size: 0.72rem; font-weight: 700;
+  background: var(--bg-code); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--neon-purple);
+}
+
+/* ----- محتوای اصلی ----- */
+.main { margin-right: 330px; flex: 1; padding: 0 5vw 100px; max-width: 1200px; }
+
+/* ----- دکمه منو ----- */
+.menu-toggle {
+  display: none; position: fixed; top: 16px; right: 16px; z-index: 200;
+  background: var(--bg-glass); backdrop-filter: blur(12px);
+  border: 1px solid var(--neon-cyan); color: var(--neon-cyan);
+  width: 50px; height: 50px; border-radius: 14px;
+  font-size: 1.4rem; cursor: pointer; box-shadow: var(--glow-cyan);
+}
+.overlay {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+}
+.overlay.show { display: block; }
+
+/* ----- دکمه تغییر تم ----- */
+.theme-toggle {
+  position: fixed; top: 16px; left: 16px; z-index: 200;
+  background: var(--bg-glass); backdrop-filter: blur(12px);
+  border: 1px solid var(--neon-purple); color: var(--neon-purple);
+  width: 50px; height: 50px; border-radius: 14px;
+  font-size: 1.3rem; cursor: pointer; box-shadow: var(--glow-purple);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.theme-toggle:hover { transform: rotate(20deg) scale(1.08); }
+
+/* ════════════════════════════════════════════════════════════
+   هیرو
+   ════════════════════════════════════════════════════════════ */
+.hero { text-align: center; padding: 100px 20px 70px; position: relative; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; background: var(--bg-glass); backdrop-filter: blur(10px);
+  border: 1px solid var(--neon-cyan); border-radius: 30px;
+  color: var(--neon-cyan); font-size: 0.85rem; margin-bottom: 28px;
+  box-shadow: var(--glow-cyan); animation: badge-glow 3s ease-in-out infinite;
+}
+@keyframes badge-glow { 50% { box-shadow: 0 0 35px rgba(34, 211, 238, 0.5); } }
+.hero h1 { font-size: clamp(2.2rem, 7vw, 5rem); font-weight: 900; line-height: 1.25; margin-bottom: 24px; letter-spacing: -1px; }
+.gradient-text {
+  background: linear-gradient(120deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink), var(--neon-cyan));
+  background-size: 300% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; animation: shine 5s linear infinite;
+}
+@keyframes shine { to { background-position: 300% center; } }
+.hero p { font-size: 1.2rem; color: var(--text-dim); max-width: 720px; margin: 0 auto 36px; }
+.hero-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 44px; }
+.stat {
+  background: var(--bg-glass); backdrop-filter: blur(12px);
+  border: 1px solid var(--border-2); border-radius: 18px;
+  padding: 22px 30px; min-width: 130px; transition: all 0.3s;
+}
+.stat:hover { transform: translateY(-6px); border-color: var(--neon-cyan); box-shadow: var(--glow-cyan); }
+.stat-num { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-label { font-size: 0.82rem; color: var(--text-dim); }
+.signed-by { margin-top: 50px; font-size: 0.9rem; color: var(--text-dim); }
+.signed-by b {
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight: 800; letter-spacing: 1px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   فصل‌ها
+   ════════════════════════════════════════════════════════════ */
+.chapter {
+  background: var(--bg-glass); backdrop-filter: blur(14px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 44px; margin-bottom: 44px; position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(30px);
+}
+.chapter.visible { animation: fadeUp 0.7s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+.chapter::before {
+  content: ''; position: absolute; top: 0; right: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+}
+.chapter-header { display: flex; align-items: center; gap: 18px; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+.chapter-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 60px; height: 60px; font-size: 1.5rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  color: #fff; border-radius: 16px; box-shadow: var(--glow-cyan);
+}
+.chapter-header h2 { font-size: clamp(1.4rem, 3.5vw, 2.1rem); color: var(--text-bright); }
+.chapter-header .sub { font-size: 0.92rem; color: var(--text-dim); font-weight: 400; }
+
+.chapter h3 { font-size: 1.4rem; color: var(--neon-cyan); margin: 40px 0 16px; display: flex; align-items: center; gap: 10px; scroll-margin-top: 24px; }
+.chapter h3::before { content: '▹'; color: var(--neon-pink); }
+.chapter h4 { font-size: 1.12rem; color: var(--neon-purple); margin: 26px 0 12px; }
+.chapter p { margin-bottom: 15px; }
+.chapter ul, .chapter ol { margin: 0 24px 18px 0; }
+.chapter li { margin-bottom: 9px; }
+.chapter a { color: var(--neon-blue); text-decoration: none; border-bottom: 1px dashed var(--neon-blue); }
+.chapter a:hover { color: var(--neon-cyan); border-bottom-style: solid; }
+
+.kw {
+  font-family: var(--font-code); background: var(--bg-code); color: var(--neon-pink);
+  padding: 2px 8px; border-radius: 6px; font-size: 0.86em;
+  border: 1px solid var(--border); direction: ltr; display: inline-block;
+}
+
+/* ════════════════════════════════════════════════════════════
+   کارت ویژگی — جزء اصلی دایره‌المعارف CSS
+   ════════════════════════════════════════════════════════════ */
+.tag-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); margin: 22px 0; overflow: hidden;
+  transition: all 0.3s; position: relative;
+}
+.tag-card:hover { border-color: var(--border-2); box-shadow: var(--shadow-card); }
+.tag-card-head {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+  padding: 16px 20px; background: var(--bg-panel-2);
+  border-bottom: 1px solid var(--border);
+}
+.tag-name {
+  font-family: var(--font-code); font-size: 1.15rem; font-weight: 700;
+  color: var(--neon-cyan); direction: ltr;
+}
+.tag-pill {
+  font-size: 0.68rem; padding: 3px 10px; border-radius: 20px;
+  font-weight: 700; letter-spacing: 0.3px;
+}
+.pill-prop   { background: rgba(96,165,250,0.15); color: var(--neon-blue); border: 1px solid var(--neon-blue); }
+.pill-sel    { background: rgba(52,211,153,0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
+.pill-layout { background: rgba(167,139,250,0.15); color: var(--neon-purple); border: 1px solid var(--neon-purple); }
+.pill-func   { background: rgba(251,191,36,0.15); color: var(--neon-yellow); border: 1px solid var(--neon-yellow); }
+.pill-anim   { background: rgba(244,114,182,0.15); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
+.pill-new    { background: rgba(251,146,60,0.15); color: var(--neon-orange); border: 1px solid var(--neon-orange); }
+.pill-dep    { background: rgba(248,113,113,0.15); color: var(--neon-red); border: 1px solid var(--neon-red); }
+.tag-desc-head { flex: 1 1 100%; color: var(--text-dim); font-size: 0.9rem; }
+.tag-card-body { padding: 18px 20px; }
+.tag-card-body p:last-child { margin-bottom: 0; }
+
+/* ════════════════════════════════════════════════════════════
+   بلوک کد
+   ════════════════════════════════════════════════════════════ */
+.code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; overflow: hidden; direction: ltr; position: relative; }
+.code-head { display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; background: var(--bg-panel-2); border-bottom: 1px solid var(--border); }
+.code-dots { display: flex; gap: 6px; }
+.code-dots span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+.dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+.code-lang { font-family: var(--font-code); font-size: 0.76rem; color: var(--text-dim); }
+.code-block pre { padding: 18px; overflow-x: auto; font-family: var(--font-code); font-size: 0.86rem; line-height: 1.75; }
+.code-block code { font-family: var(--font-code); color: #cbd5e1; }
+html[data-theme="light"] .code-block code { color: #334155; }
+.copy-btn {
+  background: var(--bg-code); border: 1px solid var(--border-2); color: var(--text-dim);
+  font-family: var(--font-main); font-size: 0.72rem; padding: 4px 12px;
+  border-radius: 7px; cursor: pointer; transition: all 0.2s;
+}
+.copy-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+.copy-btn.copied { color: var(--neon-green); border-color: var(--neon-green); }
+/* رنگ‌بندی سینتکس CSS */
+.sel { color: var(--neon-yellow); }       /* سلکتور */
+.prop { color: var(--neon-cyan); }         /* پراپرتی */
+.val { color: var(--neon-green); }         /* مقدار */
+.unit { color: var(--neon-orange); }       /* واحد */
+.func { color: var(--neon-purple); }       /* تابع */
+.cmt { color: #5a6a86; font-style: italic; }
+.punc { color: #8896b0; }                  /* علائم */
+.txt { color: var(--text-main); }
+.atrule { color: var(--neon-pink); }       /* at-rule */
+
+/* ════════════════════════════════════════════════════════════
+   جعبه‌ها
+   ════════════════════════════════════════════════════════════ */
+.box { border-radius: 12px; padding: 18px 22px; margin: 20px 0; border-right: 4px solid; position: relative; }
+.box-title { font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+.box-tip    { background: rgba(52,211,153,0.07); border-color: var(--neon-green); }   .box-tip .box-title    { color: var(--neon-green); }
+.box-warn   { background: rgba(251,146,60,0.07); border-color: var(--neon-orange); }  .box-warn .box-title   { color: var(--neon-orange); }
+.box-note   { background: rgba(96,165,250,0.07); border-color: var(--neon-blue); }    .box-note .box-title   { color: var(--neon-blue); }
+.box-danger { background: rgba(248,113,113,0.07); border-color: var(--neon-red); }    .box-danger .box-title { color: var(--neon-red); }
+.box-future { background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(244,114,182,0.06)); border-color: var(--neon-purple); } .box-future .box-title { color: var(--neon-purple); }
+
+/* جداول */
+.ref-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem; }
+.ref-table.ltr { direction: ltr; }
+.ref-table th, .ref-table td { border: 1px solid var(--border); padding: 9px 13px; text-align: right; vertical-align: top; }
+.ref-table.ltr th, .ref-table.ltr td { text-align: left; }
+.ref-table th { background: var(--bg-panel-2); color: var(--neon-purple); }
+.ref-table .mono { font-family: var(--font-code); color: var(--neon-pink); white-space: nowrap; direction: ltr; }
+.ref-table tr:hover td { background: rgba(255,255,255,0.02); }
+html[data-theme="light"] .ref-table tr:hover td { background: rgba(0,0,0,0.02); }
+
+/* خروجی زنده (Live Demo) */
+.live-demo { background: var(--bg-deep-2); border-radius: 12px; padding: 28px 20px 20px; margin: 16px 0; border: 2px dashed var(--neon-cyan); position: relative; }
+.live-label { font-size: 0.72rem; color: var(--neon-cyan); background: var(--bg-code); display: inline-block; padding: 4px 12px; border-radius: 6px; position: absolute; top: -13px; right: 14px; border: 1px solid var(--neon-cyan); }
+
+/* نوار پیشرفت */
+.progress-bar { position: fixed; top: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); z-index: 300; width: 0%; box-shadow: 0 0 12px var(--neon-cyan); transition: width 0.1s; }
+
+/* فوتر */
+.footer { text-align: center; padding: 60px 20px; color: var(--text-dim); border-top: 1px solid var(--border); margin-top: 50px; }
+.footer .gradient-text { font-size: 1.4rem; font-weight: 800; }
+.footer .sig { margin-top: 18px; font-size: 1rem; }
+.footer .sig b { background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; letter-spacing: 2px; }
+
+/* دکمه بالا */
+.to-top { position: fixed; bottom: 24px; left: 24px; width: 52px; height: 52px; background: var(--bg-glass); backdrop-filter: blur(10px); border: 1px solid var(--neon-cyan); color: var(--neon-cyan); border-radius: 14px; font-size: 1.3rem; cursor: pointer; z-index: 150; opacity: 0; visibility: hidden; transition: all 0.3s; box-shadow: var(--glow-cyan); }
+.to-top.show { opacity: 1; visibility: visible; }
+.to-top:hover { background: var(--neon-cyan); color: var(--bg-deep); transform: scale(1.1); }
+
+/* پیام عدم یافتن جستجو */
+.no-results { text-align: center; padding: 40px; color: var(--text-dim); display: none; }
+.search-hidden { display: none !important; }
+mark.hl { background: var(--neon-yellow); color: #1a1a1a; padding: 0 2px; border-radius: 3px; }
+
+/* ════════════════════════════════════════════════════════════
+   دموهای زنده مخصوص CSS
+   ════════════════════════════════════════════════════════════ */
+.demo-box { color: #fff; padding: 16px; border-radius: 8px; text-align: center; font-weight: 700; font-family: var(--font-code); }
+.demo-flex { display: flex; gap: 12px; flex-wrap: wrap; }
+.demo-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.dc1 { background: var(--neon-cyan); } .dc2 { background: var(--neon-purple); } .dc3 { background: var(--neon-pink); }
+.dc4 { background: var(--neon-green); } .dc5 { background: var(--neon-orange); } .dc6 { background: var(--neon-blue); }
+
+/* ════════════════════════════════════════════════════════════
+   ریسپانسیو
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .sidebar { width: 310px; right: -320px; transform: none; box-shadow: -10px 0 40px rgba(0,0,0,0.5); transition: right 0.35s cubic-bezier(.4,0,.2,1); }
+  .sidebar.open { right: 0; }
+  .main { margin-right: 0; width: 100%; max-width: 100%; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+}
+@media (max-width: 768px) {
+  body { font-size: 15px; }
+  .chapter { padding: 28px 18px; border-radius: 12px; }
+  .hero { padding: 80px 16px 50px; }
+  .chapter-header { gap: 12px; }
+  .chapter-badge { min-width: 48px; height: 48px; font-size: 1.2rem; }
+  .tag-card-head { padding: 14px 16px; }
+  .code-block pre { font-size: 0.78rem; padding: 14px; }
+  .ref-table { font-size: 0.78rem; }
+  .ref-table th, .ref-table td { padding: 7px 9px; }
+  .demo-grid-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .hero h1 { font-size: 2rem; }
+  .hero p { font-size: 1rem; }
+  .stat { padding: 16px 20px; min-width: 100px; }
+  .stat-num { font-size: 1.7rem; }
+  .to-top { bottom: 16px; left: 16px; width: 46px; height: 46px; }
+  .theme-toggle { width: 44px; height: 44px; top: 74px; }
+  .chapter h3 { font-size: 1.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ===== Sign-off card ===== */
+.signoff {
+  position: relative; margin-top: 40px; padding: 48px 36px; text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(0,229,255,0.08), rgba(168,85,247,0.10));
+  border: 1px solid rgba(0,229,255,0.25); overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,229,255,0.15), inset 0 0 40px rgba(168,85,247,0.06);
+}
+.signoff-glow {
+  position: absolute; top: -60%; left: 50%; width: 420px; height: 420px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(0,229,255,0.30), transparent 70%);
+  filter: blur(40px); pointer-events: none; animation: floatGlow 6s ease-in-out infinite;
+}
+@keyframes floatGlow { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(20px);} }
+.signoff h3 {
+  position: relative; font-size: 1.8rem; margin-bottom: 14px;
+  background: linear-gradient(90deg, #00e5ff, #a855f7, #00e5ff); background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent; animation: shimmer 4s linear infinite;
+}
+@keyframes shimmer { to { background-position: 200% center; } }
+.signoff p { position: relative; max-width: 620px; margin: 0 auto 26px; color: var(--text-dim); line-height: 2; }
+.signoff-author {
+  position: relative; display: inline-flex; flex-direction: column; gap: 6px; align-items: center;
+  padding: 18px 40px; border-radius: 16px; background: rgba(10,14,39,0.6);
+  border: 1px solid rgba(168,85,247,0.3); backdrop-filter: blur(8px);
+}
+.signoff-label { font-size: 0.85rem; color: var(--text-dim); letter-spacing: 1px; }
+.signoff-name {
+  font-size: 2.2rem; font-weight: 900; letter-spacing: 4px;
+  background: linear-gradient(90deg, #00e5ff, #a855f7);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  text-shadow: 0 0 30px rgba(0,229,255,0.4);
+}
+@media (max-width: 480px) {
+  .signoff { padding: 32px 20px; }
+  .signoff h3 { font-size: 1.4rem; }
+  .signoff-name { font-size: 1.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+
+<div class="progress-bar" id="progressBar"></div>
+<button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">☰</button>
+<button class="theme-toggle" id="themeToggle" aria-label="تغییر تم" title="تغییر تم روشن/تاریک">🌙</button>
+<div class="overlay" id="overlay"></div>
+
+<div class="layout">
+  <!-- ════════ ناوبری ════════ -->
+  <nav class="sidebar" id="sidebar" aria-label="ناوبری اصلی">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <span class="logo">🎨</span>
+        <span>
+          <span class="brand-text">دایره‌المعارف CSS</span>
+          <span class="brand-sub">از ۰ تا ۱۰۰</span>
+        </span>
+      </div>
+      <div class="search-box">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="جستجوی ویژگی یا موضوع..." aria-label="جستجو">
+      </div>
+      <div class="search-count" id="searchCount"></div>
+    </div>
+
+    <div class="nav-scroll" id="navScroll">
+      <div class="nav-section-title">🚀 شروع</div>
+      <a href="#intro" class="nav-link"><span class="nav-num">۰</span> CSS چیست؟</a>
+      <a href="#syntax" class="nav-link"><span class="nav-num">۱</span> سینتکس و قواعد</a>
+      <a href="#insert" class="nav-link"><span class="nav-num">۲</span> ۳ روش افزودن CSS</a>
+
+      <div class="nav-section-title">🎯 سلکتورها</div>
+      <a href="#selectors" class="nav-link"><span class="nav-num">۳</span> انواع سلکتور</a>
+      <a href="#combinators" class="nav-link"><span class="nav-num">۴</span> ترکیب‌کننده‌ها</a>
+      <a href="#pseudo" class="nav-link"><span class="nav-num">۵</span> شبه‌کلاس و شبه‌عنصر</a>
+      <a href="#specificity" class="nav-link"><span class="nav-num">۶</span> اولویت و Cascade</a>
+
+      <div class="nav-section-title">📦 جعبه و چیدمان پایه</div>
+      <a href="#boxmodel" class="nav-link"><span class="nav-num">۷</span> باکس مدل</a>
+      <a href="#display" class="nav-link"><span class="nav-num">۸</span> display و جریان</a>
+      <a href="#position" class="nav-link"><span class="nav-num">۹</span> Positioning</a>
+      <a href="#units" class="nav-link"><span class="nav-num">۱۰</span> واحدها</a>
+
+      <div class="nav-section-title">🎨 ظاهر و متن</div>
+      <a href="#colors" class="nav-link"><span class="nav-num">۱۱</span> رنگ‌ها</a>
+      <a href="#background" class="nav-link"><span class="nav-num">۱۲</span> بک‌گراند</a>
+      <a href="#typography" class="nav-link"><span class="nav-num">۱۳</span> تایپوگرافی</a>
+      <a href="#border" class="nav-link"><span class="nav-num">۱۴</span> بوردر و سایه</a>
+
+      <div class="nav-section-title">🧩 چیدمان مدرن</div>
+      <a href="#flexbox" class="nav-link"><span class="nav-num">۱۵</span> Flexbox</a>
+      <a href="#grid" class="nav-link"><span class="nav-num">۱۶</span> Grid</a>
+      <a href="#responsive" class="nav-link"><span class="nav-num">۱۷</span> ریسپانسیو</a>
+
+      <div class="nav-section-title">✨ پویانمایی</div>
+      <a href="#transform" class="nav-link"><span class="nav-num">۱۸</span> Transform</a>
+      <a href="#transition" class="nav-link"><span class="nav-num">۱۹</span> Transition</a>
+      <a href="#animation" class="nav-link"><span class="nav-num">۲۰</span> Animation</a>
+      <a href="#filter" class="nav-link"><span class="nav-num">۲۱</span> فیلتر و افکت</a>
+
+      <div class="nav-section-title">🔮 پیشرفته</div>
+      <a href="#variables" class="nav-link"><span class="nav-num">۲۲</span> متغیرها</a>
+      <a href="#functions" class="nav-link"><span class="nav-num">۲۳</span> توابع</a>
+      <a href="#modern" class="nav-link"><span class="nav-num">۲۴</span> ویژگی‌های نوین</a>
+      <a href="#reference" class="nav-link"><span class="nav-num">📚</span> مرجع سریع</a>
+    </div>
+  </nav>
+
+  <!-- ════════ محتوا ════════ -->
+  <main class="main">
+    <header class="hero" id="top">
+      <span class="hero-badge">🎨 نسخه دایره‌المعارفی — کامل و آفلاین</span>
+      <h1>دنیای کامل <span class="gradient-text">CSS</span><br>از <span class="gradient-text">صفر</span> تا <span class="gradient-text">صد</span></h1>
+      <p>ادامه‌ی رسمی دایره‌المعارف HTML — این‌بار با تمرکز کامل روی CSS. هر مفهوم، هر ویژگی و هر تکنیک با مثال، خروجی زنده و توضیح قدم‌به‌قدم برای کسی که هیچ آشنایی‌ای با این دنیا ندارد.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">۲۵</div><div class="stat-label">فصل کامل</div></div>
+        <div class="stat"><div class="stat-num">۲۰۰+</div><div class="stat-label">ویژگی و مفهوم</div></div>
+        <div class="stat"><div class="stat-num">۱۰۰٪</div><div class="stat-label">آفلاین</div></div>
+        <div class="stat"><div class="stat-num">∞</div><div class="stat-label">مثال زنده</div></div>
+      </div>
+      <p class="signed-by">نوشته‌شده توسط <b>صدرا حاتمی | Sadra Hatami</b></p>
+    </header>
+
+    <!-- ════════ فصل ۰: CSS چیست؟ ════════ -->
+    <section class="chapter" id="intro">
+      <div class="chapter-header">
+        <span class="chapter-badge">۰</span>
+        <div>
+          <h2>CSS چیست و چرا وجود دارد؟</h2>
+          <span class="sub">از لباس صفحه تا کنترل کامل ظاهر</span>
+        </div>
+      </div>
+
+      <p>اگر HTML را یاد گرفته باشی، می‌دانی که HTML <b>اسکلت</b> و <b>محتوای</b> صفحه را می‌سازد: عنوان، پاراگراف، عکس، دکمه و... . اما HTML به‌تنهایی خیلی زشت است — یک متن سیاه‌وسفید ساده روی پس‌زمینه سفید. اینجاست که <b>CSS</b> وارد می‌شود.</p>
+
+      <p><b>CSS</b> مخفف <span class="kw">Cascading Style Sheets</span> (برگه‌های سبک آبشاری) است. وظیفه‌اش این است که به مرورگر بگوید عناصر HTML <b>چطور دیده شوند</b>: چه رنگی، چه اندازه‌ای، کجای صفحه، با چه فاصله‌ای، با چه انیمیشنی و... .</p>
+
+      <div class="box box-note">
+        <div class="box-title">📌 یک تشبیه ساده</div>
+        <p>اگر یک صفحه‌ی وب را به یک انسان تشبیه کنیم: <b>HTML</b> اسکلت و اندام‌هاست، <b>CSS</b> لباس، آرایش و ظاهر است، و <b>JavaScript</b> رفتار و حرکت است. هر سه با هم یک سایت کامل می‌سازند.</p>
+      </div>
+
+      <h3>کلمه‌ی «Cascading» یعنی چه؟</h3>
+      <p>یعنی «آبشاری». چند فایل و قانون مختلف می‌توانند روی یک عنصر تأثیر بگذارند و این قوانین مثل آبشار روی هم می‌ریزند. CSS قانون‌هایی دارد که تعیین می‌کند وقتی چند دستور با هم تناقض دارند، کدام برنده شود (این را در فصل اولویت کامل توضیح می‌دهیم).</p>
+
+      <h3>اولین کد CSS تو</h3>
+      <p>بیا یک پاراگراف ساده را رنگی و بزرگ کنیم. نگران فهمیدن جزئیات نباش، فقط ببین چطور است:</p>
+      <div class="code-block">
+        <div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">p</span> <span class="punc">{</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="val">deeppink</span><span class="punc">;</span>      <span class="cmt">/* رنگ متن */</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">24px</span><span class="punc">;</span>     <span class="cmt">/* اندازه فونت */</span>
+  <span class="prop">font-weight</span><span class="punc">:</span> <span class="val">bold</span><span class="punc">;</span>   <span class="cmt">/* ضخامت */</span>
+<span class="punc">}</span></code></pre>
+      </div>
+
+      <div class="live-demo">
+        <span class="live-label">خروجی زنده ↓</span>
+        <p style="color:deeppink;font-size:24px;font-weight:bold;margin:0;">این پاراگراف با CSS بالا استایل گرفته!</p>
+      </div>
+
+      <h3>تاریخچه‌ی کوتاه CSS</h3>
+      <table class="ref-table">
+        <tr><th>نسخه</th><th>سال</th><th>چه آورد</th></tr>
+        <tr><td class="mono">CSS1</td><td>۱۹۹۶</td><td>رنگ، فونت، حاشیه — پایه‌ها</td></tr>
+        <tr><td class="mono">CSS2</td><td>۱۹۹۸</td><td>Positioning، media types</td></tr>
+        <tr><td class="mono">CSS3</td><td>۱۹۹۹+</td><td>به «ماژول‌ها» شکست: انیمیشن، Flexbox، Grid، Transform و...</td></tr>
+        <tr><td class="mono">CSS امروز</td><td>زنده</td><td>دیگر شماره‌ی نسخه ندارد؛ هر ماژول جدا رشد می‌کند (مثل HTML Living Standard)</td></tr>
+      </table>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 نکته مهم برای مبتدی‌ها</div>
+        <p>امروز کسی نمی‌گوید «CSS3»؛ فقط می‌گوییم «CSS». ماژول‌های جدید مرتب اضافه می‌شوند. در این دایره‌المعارف هر جا ویژگی نسبتاً جدیدی باشد، با برچسب <span class="tag-pill pill-new" style="display:inline-block">نوین</span> مشخصش می‌کنیم.</p>
+      </div>
+    </section>
+
+    <!-- ════════ فصل ۱: سینتکس ════════ -->
+    <section class="chapter" id="syntax">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱</span>
+        <div>
+          <h2>سینتکس و قواعد نگارش CSS</h2>
+          <span class="sub">دستور زبان دقیق CSS را کالبدشکافی کنیم</span>
+        </div>
+      </div>
+
+      <p>هر قانون (Rule) در CSS از چند بخش ساخته شده. بیا با دقت یک قانون را تشریح کنیم تا هرگز گیج نشوی.</p>
+
+      <h3>آناتومی یک قانون (Rule)</h3>
+      <div class="code-block">
+        <div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">آناتومی قانون CSS</span></div>
+<pre><code><span class="cmt">  ┌── سلکتور (Selector): چه چیزی را استایل بدهیم؟</span>
+<span class="sel">h1</span> <span class="punc">{</span>
+  <span class="cmt">┌── پراپرتی    ┌── مقدار (Value)</span>
+  <span class="prop">color</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">;</span>   <span class="cmt">← یک «اعلان» (Declaration)</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">32px</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="cmt">▲                    ▲</span>
+<span class="cmt">آکولاد باز           ; جداکننده اعلان‌ها</span></code></pre>
+      </div>
+
+      <ul>
+        <li><b>سلکتور (Selector):</b> مشخص می‌کند <b>کدام</b> عناصر استایل بگیرند (اینجا همه‌ی <span class="kw">h1</span>ها).</li>
+        <li><b>بلوک اعلان (Declaration Block):</b> هر چیز داخل آکولاد <span class="kw">{ }</span>.</li>
+        <li><b>اعلان (Declaration):</b> یک جفت <b>پراپرتی: مقدار</b>.</li>
+        <li><b>پراپرتی (Property):</b> چه ویژگی‌ای را تغییر دهیم؟ (مثلاً <span class="kw">color</span>).</li>
+        <li><b>مقدار (Value):</b> چه مقداری؟ (مثلاً <span class="kw">blue</span>).</li>
+        <li><b>سمی‌کالن (;):</b> هر اعلان را از بعدی جدا می‌کند — <b>فراموشش نکن!</b></li>
+      </ul>
+
+      <div class="box box-warn">
+        <div class="box-title">⚠️ پرتکرارترین اشتباه مبتدی‌ها</div>
+        <p>فراموش کردن <span class="kw">;</span> در انتهای اعلان! اگر بنویسی <span class="kw">color: red font-size: 20px;</span> هر دو اعلان نادیده گرفته می‌شوند. همیشه بعد از هر مقدار یک <span class="kw">;</span> بگذار.</p>
+      </div>
+
+      <h3>کامنت در CSS</h3>
+      <p>برای یادداشت‌گذاری که مرورگر آن را اجرا نمی‌کند:</p>
+      <div class="code-block">
+        <div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">کامنت</span></div>
+<pre><code><span class="cmt">/* این یک کامنت تک‌خطی است */</span>
+
+<span class="cmt">/*
+  کامنت
+  چندخطی هم همینطوری
+*/</span>
+
+<span class="sel">body</span> <span class="punc">{</span> <span class="prop">margin</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="cmt">/* حذف فاصله پیش‌فرض */</span> <span class="punc">}</span></code></pre>
+      </div>
+      <div class="box box-note">
+        <div class="box-title">📌 توجه</div>
+        <p>در CSS فقط کامنت <span class="kw">/* */</span> وجود دارد. کامنت تک‌خطی <span class="kw">//</span> (مثل JavaScript) در CSS خالص <b>کار نمی‌کند</b>.</p>
+      </div>
+
+      <h3>حساسیت به حروف و فاصله</h3>
+      <ul>
+        <li>پراپرتی‌ها و مقادیر کلیدواژه‌ای معمولاً <b>حساس به حروف نیستند</b> (<span class="kw">COLOR</span> = <span class="kw">color</span>)، اما قرارداد این است که همیشه <b>حروف کوچک</b> بنویسی.</li>
+        <li>نام کلاس‌ها و IDها <b>حساس به حروف هستند</b> (<span class="kw">.Box</span> با <span class="kw">.box</span> فرق دارد).</li>
+        <li>فاصله‌ها و خطوط خالی اضافی نادیده گرفته می‌شوند، پس می‌توانی کد را تمیز و خوانا بنویسی.</li>
+      </ul>
+
+      <h3>چند مقدار و چند سلکتور</h3>
+      <div class="code-block">
+        <div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">گروه‌بندی</span></div>
+<pre><code><span class="cmt">/* یک قانون برای چند سلکتور (با کاما) */</span>
+<span class="sel">h1</span><span class="punc">,</span> <span class="sel">h2</span><span class="punc">,</span> <span class="sel">h3</span> <span class="punc">{</span>
+  <span class="prop">font-family</span><span class="punc">:</span> <span class="val">Tahoma</span><span class="punc">,</span> <span class="val">sans-serif</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre>
+      </div>
+    </section>
+
+    <!-- ════════ فصل ۲: روش افزودن CSS ════════ -->
+    <section class="chapter" id="insert">
+      <div class="chapter-header">
+        <span class="chapter-badge">۲</span>
+        <div>
+          <h2>سه روش افزودن CSS به HTML</h2>
+          <span class="sub">کجا و چطور CSS بنویسیم؟</span>
+        </div>
+      </div>
+
+      <p>سه راه برای وصل کردن CSS به HTML وجود دارد. هر کدام جا و کاربرد خودش را دارد.</p>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">۱. Inline (درون‌خطی)</span>
+          <span class="tag-pill pill-dep">کمترین توصیه</span>
+          <span class="tag-desc-head">با صفت style مستقیماً روی یک تگ</span>
+        </div>
+        <div class="tag-card-body">
+          <p>CSS را داخل صفت <span class="kw">style</span> همان عنصر می‌نویسی. فقط روی <b>همان یک عنصر</b> اثر دارد.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">HTML</span></div>
+<pre><code><span class="atrule">&lt;p</span> <span class="attr">style</span>=<span class="val">"color: red; font-size: 20px;"</span><span class="atrule">&gt;</span>سلام<span class="atrule">&lt;/p&gt;</span></code></pre></div>
+          <div class="box box-danger"><div class="box-title">💀 چرا توصیه نمی‌شود؟</div><p>قابل استفاده مجدد نیست، کد را شلوغ می‌کند و بالاترین اولویت را دارد که باعث دردسر می‌شود. فقط برای تست‌های سریع یا ایمیل HTML استفاده‌اش کن.</p></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">۲. Internal (داخلی)</span>
+          <span class="tag-pill pill-prop">متوسط</span>
+          <span class="tag-desc-head">داخل تگ &lt;style&gt; در بخش head</span>
+        </div>
+        <div class="tag-card-body">
+          <p>تمام CSS را داخل یک تگ <span class="kw">&lt;style&gt;</span> در <span class="kw">&lt;head&gt;</span> می‌نویسی. روی کل <b>همان صفحه</b> اثر دارد.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">HTML</span></div>
+<pre><code><span class="atrule">&lt;head&gt;</span>
+  <span class="atrule">&lt;style&gt;</span>
+    <span class="sel">p</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span> <span class="punc">}</span>
+  <span class="atrule">&lt;/style&gt;</span>
+<span class="atrule">&lt;/head&gt;</span></code></pre></div>
+          <p>خوب برای صفحات تک و کوچک یا فایل‌های آفلاین (مثل همین دایره‌المعارف!).</p>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">۳. External (خارجی)</span>
+          <span class="tag-pill pill-sel">بهترین روش ✅</span>
+          <span class="tag-desc-head">فایل .css جدا و لینک با تگ &lt;link&gt;</span>
+        </div>
+        <div class="tag-card-body">
+          <p>CSS را در یک فایل جدا با پسوند <span class="kw">.css</span> می‌نویسی و با تگ <span class="kw">&lt;link&gt;</span> به HTML وصلش می‌کنی. <b>حرفه‌ای‌ترین</b> راه.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">HTML (در head)</span></div>
+<pre><code><span class="atrule">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"styles.css"</span><span class="atrule">&gt;</span></code></pre></div>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">styles.css (فایل جدا)</span></div>
+<pre><code><span class="sel">p</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+          <div class="box box-tip"><div class="box-title">💡 چرا بهترین است؟</div><p>یک فایل CSS را به <b>صدها صفحه</b> وصل می‌کنی؛ یک‌بار تغییر بده، همه‌جا اعمال می‌شود. مرورگر هم فایل را cache می‌کند پس سایت سریع‌تر می‌شود.</p></div>
+        </div>
+      </div>
+
+      <h3>روش چهارم: @import</h3>
+      <p>می‌توانی داخل یک فایل CSS، فایل دیگری را وارد کنی. اما کند است و کمتر توصیه می‌شود:</p>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="atrule">@import</span> <span class="val">"reset.css"</span><span class="punc">;</span>
+<span class="atrule">@import url(</span><span class="val">"theme.css"</span><span class="atrule">)</span> <span class="val">screen</span><span class="punc">;</span></code></pre></div>
+    </section>
+
+
+    <!-- ════════ فصل ۳: سلکتورها ════════ -->
+    <section class="chapter" id="selectors">
+      <div class="chapter-header">
+        <span class="chapter-badge">۳</span>
+        <div>
+          <h2>انواع سلکتور (Selectors)</h2>
+          <span class="sub">چطور دقیقاً عنصری که می‌خواهی را نشانه بگیری</span>
+        </div>
+      </div>
+
+      <p>سلکتور قلب CSS است. تا وقتی ندانی چطور عنصر مورد نظر را «انتخاب» کنی، نمی‌توانی استایلش دهی. بیا از ساده‌ترین تا پیشرفته‌ترین را ببینیم.</p>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">Universal — *</span>
+          <span class="tag-pill pill-sel">سلکتور</span>
+          <span class="tag-desc-head">همه عناصر صفحه را انتخاب می‌کند</span>
+        </div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">*</span> <span class="punc">{</span> <span class="prop">margin</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">border-box</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+          <p>معروف‌ترین کاربردش «ریست» کردن فاصله‌های پیش‌فرض همه‌ی عناصر است.</p>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">Type — نام تگ</span>
+          <span class="tag-pill pill-sel">سلکتور</span>
+          <span class="tag-desc-head">همه عناصر از یک نوع</span>
+        </div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">p</span> <span class="punc">{</span> <span class="prop">line-height</span><span class="punc">:</span> <span class="unit">1.6</span><span class="punc">;</span> <span class="punc">}</span>   <span class="cmt">/* همه پاراگراف‌ها */</span>
+<span class="sel">a</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">;</span> <span class="punc">}</span>       <span class="cmt">/* همه لینک‌ها */</span></code></pre></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">Class — .نام</span>
+          <span class="tag-pill pill-sel">سلکتور</span>
+          <span class="tag-desc-head">پرکاربردترین سلکتور — با نقطه</span>
+        </div>
+        <div class="tag-card-body">
+          <p>کلاس‌ها قابل استفاده مجددند: یک عنصر می‌تواند چند کلاس داشته باشد و یک کلاس روی چند عنصر.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">HTML + CSS</span></div>
+<pre><code><span class="cmt">/* CSS */</span>
+<span class="sel">.btn</span> <span class="punc">{</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">10px</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">.btn.primary</span> <span class="punc">{</span> <span class="prop">background</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">;</span> <span class="punc">}</span>  <span class="cmt">/* عنصری که هر دو کلاس را دارد */</span>
+
+<span class="cmt">&lt;!-- HTML --&gt;</span>
+<span class="atrule">&lt;button</span> <span class="attr">class</span>=<span class="val">"btn primary"</span><span class="atrule">&gt;</span>دکمه<span class="atrule">&lt;/button&gt;</span></code></pre></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">ID — #نام</span>
+          <span class="tag-pill pill-sel">سلکتور</span>
+          <span class="tag-desc-head">منحصربه‌فرد — با هشتگ</span>
+        </div>
+        <div class="tag-card-body">
+          <p>هر ID باید در صفحه <b>یکتا</b> باشد. اولویت بالایی دارد، پس با احتیاط استفاده کن.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">#header</span> <span class="punc">{</span> <span class="prop">background</span><span class="punc">:</span> <span class="val">black</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+          <div class="box box-warn"><div class="box-title">⚠️ توصیه حرفه‌ای</div><p>برای استایل‌دهی، <b>کلاس</b> را به ID ترجیح بده. IDها را بیشتر برای لینک داخلی (<span class="kw">#section</span>) و JavaScript نگه دار.</p></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">Attribute — [attr]</span>
+          <span class="tag-pill pill-sel">سلکتور</span>
+          <span class="tag-desc-head">انتخاب بر اساس صفت‌ها</span>
+        </div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">[disabled]</span>          <span class="cmt">/* هر عنصری که صفت disabled دارد */</span>
+<span class="sel">[type="text"]</span>       <span class="cmt">/* مقدار دقیقاً برابر */</span>
+<span class="sel">[href^="https"]</span>     <span class="cmt">/* شروع‌شده با (^) */</span>
+<span class="sel">[href$=".pdf"]</span>      <span class="cmt">/* پایان‌یافته با ($) */</span>
+<span class="sel">[class*="col"]</span>      <span class="cmt">/* شامل (*) */</span>
+<span class="sel">[lang|="en"]</span>        <span class="cmt">/* en یا en-... (|) */</span>
+<span class="sel">[title~="hello"]</span>    <span class="cmt">/* یک کلمه از لیست (~) */</span></code></pre></div>
+          <table class="ref-table ltr">
+            <tr><th>الگو</th><th>یعنی</th></tr>
+            <tr><td class="mono">[a=v]</td><td>دقیقاً برابر</td></tr>
+            <tr><td class="mono">[a^=v]</td><td>شروع با v</td></tr>
+            <tr><td class="mono">[a$=v]</td><td>پایان با v</td></tr>
+            <tr><td class="mono">[a*=v]</td><td>شامل v</td></tr>
+            <tr><td class="mono">[a~=v]</td><td>یک کلمه‌ی کامل v</td></tr>
+            <tr><td class="mono">[a|=v]</td><td>v یا v-…</td></tr>
+            <tr><td class="mono">[a=v i]</td><td>بدون حساسیت به حروف (i)</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ فصل ۴: ترکیب‌کننده‌ها ════════ -->
+    <section class="chapter" id="combinators">
+      <div class="chapter-header">
+        <span class="chapter-badge">۴</span>
+        <div>
+          <h2>ترکیب‌کننده‌ها (Combinators)</h2>
+          <span class="sub">رابطه‌ی بین عناصر را نشانه بگیر</span>
+        </div>
+      </div>
+
+      <p>گاهی می‌خواهی عنصری را فقط وقتی انتخاب کنی که <b>داخل</b> یا <b>کنار</b> عنصر دیگری باشد. اینجا ترکیب‌کننده‌ها وارد می‌شوند.</p>
+
+      <table class="ref-table ltr">
+        <tr><th>نماد</th><th>نام</th><th>یعنی</th></tr>
+        <tr><td class="mono">A B</td><td>Descendant (فاصله)</td><td>هر B داخل A (هر عمقی)</td></tr>
+        <tr><td class="mono">A &gt; B</td><td>Child</td><td>فقط B که فرزند <b>مستقیم</b> A است</td></tr>
+        <tr><td class="mono">A + B</td><td>Adjacent sibling</td><td>اولین B که <b>بلافاصله</b> بعد A می‌آید</td></tr>
+        <tr><td class="mono">A ~ B</td><td>General sibling</td><td>همه B‌های بعد A (هم‌سطح)</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">nav a</span> <span class="punc">{</span> ... <span class="punc">}</span>      <span class="cmt">/* هر لینک داخل nav، هر عمقی */</span>
+<span class="sel">ul &gt; li</span> <span class="punc">{</span> ... <span class="punc">}</span>    <span class="cmt">/* فقط li که فرزند مستقیم ul است */</span>
+<span class="sel">h2 + p</span> <span class="punc">{</span> ... <span class="punc">}</span>     <span class="cmt">/* پاراگراف بلافاصله بعد از h2 */</span>
+<span class="sel">h2 ~ p</span> <span class="punc">{</span> ... <span class="punc">}</span>     <span class="cmt">/* همه پاراگراف‌های هم‌سطح بعد h2 */</span></code></pre></div>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 تفاوت فاصله و &gt;</div>
+        <p>در <span class="kw">div p</span> هر پاراگراف داخل div انتخاب می‌شود، حتی اگر چند لایه عمیق‌تر باشد. اما در <span class="kw">div &gt; p</span> فقط پاراگراف‌هایی که <b>مستقیماً</b> فرزند div هستند انتخاب می‌شوند.</p>
+      </div>
+    </section>
+
+    <!-- ════════ فصل ۵: شبه‌کلاس و شبه‌عنصر ════════ -->
+    <section class="chapter" id="pseudo">
+      <div class="chapter-header">
+        <span class="chapter-badge">۵</span>
+        <div>
+          <h2>شبه‌کلاس‌ها و شبه‌عنصرها</h2>
+          <span class="sub">Pseudo-classes &amp; Pseudo-elements</span>
+        </div>
+      </div>
+
+      <p>این‌ها به تو اجازه می‌دهند بر اساس <b>حالت</b> عنصر (مثل ماوس روی آن) یا بخش‌هایی که در HTML وجود ندارند، استایل بدهی.</p>
+
+      <h3>شبه‌کلاس (با یک دونقطه :)</h3>
+      <p>حالتِ یک عنصر را نشانه می‌گیرد.</p>
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">حالت‌های تعاملی</span>
+          <span class="tag-pill pill-sel">شبه‌کلاس</span>
+          <span class="tag-desc-head">hover, focus, active, visited</span>
+        </div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">a:hover</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span> <span class="punc">}</span>       <span class="cmt">/* وقتی ماوس رویش است */</span>
+<span class="sel">input:focus</span> <span class="punc">{</span> <span class="prop">border</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid blue</span><span class="punc">;</span> <span class="punc">}</span> <span class="cmt">/* وقتی فعال است */</span>
+<span class="sel">button:active</span> <span class="punc">{</span> <span class="prop">transform</span><span class="punc">:</span> <span class="func">scale(</span><span class="unit">0.95</span><span class="func">)</span><span class="punc">;</span> <span class="punc">}</span> <span class="cmt">/* لحظه کلیک */</span>
+<span class="sel">a:visited</span> <span class="punc">{</span> <span class="prop">color</span><span class="punc">:</span> <span class="val">purple</span><span class="punc">;</span> <span class="punc">}</span>   <span class="cmt">/* لینک بازدیدشده */</span>
+<span class="sel">input:disabled</span> <span class="punc">{</span> <span class="prop">opacity</span><span class="punc">:</span> <span class="unit">0.5</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">input:checked</span> <span class="punc">{</span> ... <span class="punc">}</span>  <span class="cmt">/* چک‌باکس تیک‌خورده */</span></code></pre></div>
+          <div class="live-demo"><span class="live-label">خروجی زنده — ماوس را روی دکمه ببر ↓</span>
+            <button style="padding:10px 24px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-size:1rem;cursor:pointer;transition:.2s;" onmouseover="this.style.background='#22d3ee';this.style.transform='scale(1.05)'" onmouseout="this.style.background='#7c3aed';this.style.transform='scale(1)'">من را hover کن!</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">شبه‌کلاس‌های ساختاری</span>
+          <span class="tag-pill pill-sel">شبه‌کلاس</span>
+          <span class="tag-desc-head">nth-child, first/last-child</span>
+        </div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">li:first-child</span> <span class="punc">{</span> ... <span class="punc">}</span>   <span class="cmt">/* اولین فرزند */</span>
+<span class="sel">li:last-child</span> <span class="punc">{</span> ... <span class="punc">}</span>    <span class="cmt">/* آخرین فرزند */</span>
+<span class="sel">li:nth-child(2)</span> <span class="punc">{</span> ... <span class="punc">}</span>  <span class="cmt">/* دومین */</span>
+<span class="sel">li:nth-child(odd)</span> <span class="punc">{</span> ... <span class="punc">}</span> <span class="cmt">/* فرد: ۱،۳،۵... */</span>
+<span class="sel">li:nth-child(even)</span> <span class="punc">{</span> ... <span class="punc">}</span><span class="cmt">/* زوج: ۲،۴،۶... */</span>
+<span class="sel">li:nth-child(3n)</span> <span class="punc">{</span> ... <span class="punc">}</span> <span class="cmt">/* هر سومی */</span>
+<span class="sel">p:only-child</span> <span class="punc">{</span> ... <span class="punc">}</span>     <span class="cmt">/* تنها فرزند */</span>
+<span class="sel">p:empty</span> <span class="punc">{</span> ... <span class="punc">}</span>          <span class="cmt">/* خالی */</span>
+<span class="sel">:not(.active)</span> <span class="punc">{</span> ... <span class="punc">}</span>    <span class="cmt">/* همه به‌جز .active */</span></code></pre></div>
+          <div class="box box-tip"><div class="box-title">💡 جدول راه‌راه (zebra)</div><p>محبوب‌ترین کاربرد: <span class="kw">tr:nth-child(even) { background: #eee; }</span> برای رنگی کردن یک‌درمیان ردیف‌های جدول.</p></div>
+        </div>
+      </div>
+
+      <h3>شبه‌عنصر (با دو دونقطه ::)</h3>
+      <p>بخشی از عنصر یا محتوای ساختگی را استایل می‌دهد.</p>
+      <div class="tag-card">
+        <div class="tag-card-head">
+          <span class="tag-name">::before / ::after</span>
+          <span class="tag-pill pill-sel">شبه‌عنصر</span>
+          <span class="tag-desc-head">محتوای ساختگی قبل/بعد عنصر</span>
+        </div>
+        <div class="tag-card-body">
+          <p>قدرتمندترین شبه‌عنصرها. یک محتوای مجازی (با پراپرتی <span class="kw">content</span>) قبل یا بعد محتوای واقعی اضافه می‌کنند.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.tag::before</span> <span class="punc">{</span> <span class="prop">content</span><span class="punc">:</span> <span class="val">"🏷️ "</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">a::after</span> <span class="punc">{</span> <span class="prop">content</span><span class="punc">:</span> <span class="val">" ↗"</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="cmt">/* content خالی هم برای خط و شکل کاربرد دارد */</span>
+<span class="sel">.line::after</span> <span class="punc">{</span> <span class="prop">content</span><span class="punc">:</span> <span class="val">""</span><span class="punc">;</span> <span class="prop">display</span><span class="punc">:</span> <span class="val">block</span><span class="punc">;</span> <span class="prop">height</span><span class="punc">:</span> <span class="unit">2px</span><span class="punc">;</span> <span class="prop">background</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+          <div class="box box-warn"><div class="box-title">⚠️ نکته کلیدی</div><p>بدون پراپرتی <span class="kw">content</span> (حتی اگر <span class="kw">content: ""</span> باشد) شبه‌عنصر <b>اصلاً نمایش داده نمی‌شود</b>.</p></div>
+        </div>
+      </div>
+      <table class="ref-table ltr">
+        <tr><th>شبه‌عنصر</th><th>کاربرد</th></tr>
+        <tr><td class="mono">::first-line</td><td>اولین خط متن</td></tr>
+        <tr><td class="mono">::first-letter</td><td>اولین حرف (drop cap)</td></tr>
+        <tr><td class="mono">::selection</td><td>متن انتخاب‌شده با ماوس</td></tr>
+        <tr><td class="mono">::placeholder</td><td>متن راهنمای input</td></tr>
+        <tr><td class="mono">::marker</td><td>نشانه‌ی لیست‌ها</td></tr>
+      </table>
+    </section>
+
+    <!-- ════════ فصل ۶: اولویت ════════ -->
+    <section class="chapter" id="specificity">
+      <div class="chapter-header">
+        <span class="chapter-badge">۶</span>
+        <div>
+          <h2>اولویت (Specificity) و Cascade</h2>
+          <span class="sub">وقتی چند قانون با هم می‌جنگند، کی برنده می‌شود؟</span>
+        </div>
+      </div>
+
+      <p>این یکی از مهم‌ترین و گیج‌کننده‌ترین مفاهیم CSS است. وقتی دو قانون مختلف می‌خواهند رنگ یک عنصر را تعیین کنند، CSS بر اساس قوانینی تصمیم می‌گیرد کدام برنده شود.</p>
+
+      <h3>ترتیب تصمیم‌گیری (Cascade)</h3>
+      <ol>
+        <li><b>!important:</b> هر اعلانی که <span class="kw">!important</span> داشته باشد برنده می‌شود (تا حد امکان استفاده‌اش نکن!).</li>
+        <li><b>اولویت (Specificity):</b> سلکتور خاص‌تر برنده می‌شود.</li>
+        <li><b>ترتیب:</b> اگر اولویت برابر بود، <b>آخرین</b> قانون نوشته‌شده برنده است.</li>
+      </ol>
+
+      <h3>محاسبه اولویت — سیستم سه‌رقمی</h3>
+      <p>به هر سلکتور یک امتیاز سه‌بخشی می‌دهیم: <span class="kw">(ID, Class, Type)</span></p>
+      <table class="ref-table ltr">
+        <tr><th>نوع سلکتور</th><th>امتیاز</th><th>مثال</th></tr>
+        <tr><td>Inline style</td><td>۱،۰،۰،۰ (بالاترین)</td><td class="mono">style="..."</td></tr>
+        <tr><td>ID</td><td>۰،۱،۰،۰</td><td class="mono">#header</td></tr>
+        <tr><td>Class / Attribute / Pseudo-class</td><td>۰،۰،۱،۰</td><td class="mono">.btn / [type] / :hover</td></tr>
+        <tr><td>Type / Pseudo-element</td><td>۰،۰،۰،۱</td><td class="mono">div / ::before</td></tr>
+        <tr><td>Universal *</td><td>۰،۰،۰،۰</td><td class="mono">*</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">مثال محاسبه</span></div>
+<pre><code><span class="sel">p</span>                <span class="cmt">/* (0,0,0,1) = 1 */</span>
+<span class="sel">.box</span>             <span class="cmt">/* (0,0,1,0) = 10 */</span>
+<span class="sel">#main</span>            <span class="cmt">/* (0,1,0,0) = 100 */</span>
+<span class="sel">#main .box p</span>     <span class="cmt">/* (0,1,1,1) = 111 ← برنده! */</span>
+<span class="sel">.box.active p</span>    <span class="cmt">/* (0,0,2,1) = 21 */</span></code></pre></div>
+
+      <div class="box box-danger">
+        <div class="box-title">💀 از !important فرار کن</div>
+        <p><span class="kw">!important</span> همه‌ی قوانین اولویت را دور می‌زند و دیباگ را جهنم می‌کند. فقط در شرایط بسیار خاص (مثل override کردن استایل کتابخانه‌ها) استفاده‌اش کن.</p>
+      </div>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 توصیه طلایی</div>
+        <p>سلکتورهایت را <b>ساده و کم‌اولویت</b> نگه دار. بیشتر با <b>کلاس</b> کار کن. اینطوری وقتی لازم شد چیزی را override کنی، راحت‌تر است.</p>
+      </div>
+
+      <h3>ارث‌بری (Inheritance)</h3>
+      <p>بعضی پراپرتی‌ها به فرزندان ارث می‌رسند (مثل <span class="kw">color</span>، <span class="kw">font-family</span>) و بعضی نه (مثل <span class="kw">border</span>، <span class="kw">margin</span>). می‌توانی با مقادیر کلیدی کنترلش کنی:</p>
+      <table class="ref-table ltr">
+        <tr><th>مقدار</th><th>یعنی</th></tr>
+        <tr><td class="mono">inherit</td><td>مقدار را از والد بگیر</td></tr>
+        <tr><td class="mono">initial</td><td>به مقدار پیش‌فرض اصلی برگرد</td></tr>
+        <tr><td class="mono">unset</td><td>اگر ارثی است inherit، وگرنه initial</td></tr>
+        <tr><td class="mono">revert</td><td>به استایل پیش‌فرض مرورگر برگرد</td></tr>
+      </table>
+    </section>
+
+
+    <!-- ════════ فصل ۷: باکس مدل ════════ -->
+    <section class="chapter" id="boxmodel">
+      <div class="chapter-header">
+        <span class="chapter-badge">۷</span>
+        <div>
+          <h2>باکس مدل (Box Model)</h2>
+          <span class="sub">هر عنصر یک جعبه است — این مفهوم را عمیق بفهم</span>
+        </div>
+      </div>
+
+      <p>در CSS، <b>هر</b> عنصر یک جعبه‌ی مستطیلی است. این جعبه از چهار لایه ساخته شده که از داخل به بیرون عبارتند از: محتوا، padding، border، margin. درک این مدل، نصف یادگیری CSS است.</p>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">لایه‌های باکس</span></div>
+<pre><code><span class="cmt">┌─────────── margin (فاصله بیرونی) ───────────┐</span>
+<span class="cmt">│  ┌──────── border (حاشیه) ────────────────┐  │</span>
+<span class="cmt">│  │  ┌───── padding (فاصله داخلی) ───────┐  │  │</span>
+<span class="cmt">│  │  │                                  │  │  │</span>
+<span class="cmt">│  │  │        content (محتوا)           │  │  │</span>
+<span class="cmt">│  │  │                                  │  │  │</span>
+<span class="cmt">│  │  └──────────────────────────────────┘  │  │</span>
+<span class="cmt">│  └────────────────────────────────────────┘  │</span>
+<span class="cmt">└──────────────────────────────────────────────┘</span></code></pre></div>
+
+      <table class="ref-table ltr">
+        <tr><th>لایه</th><th>توضیح فارسی</th></tr>
+        <tr><td class="mono">content</td><td>خود محتوا (متن، عکس)</td></tr>
+        <tr><td class="mono">padding</td><td>فاصله بین محتوا و حاشیه (داخلی)</td></tr>
+        <tr><td class="mono">border</td><td>خط دور جعبه</td></tr>
+        <tr><td class="mono">margin</td><td>فاصله این جعبه از جعبه‌های دیگر (بیرونی)</td></tr>
+      </table>
+
+      <h3>کنترل هر طرف جداگانه</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — شورت‌هند</span></div>
+<pre><code><span class="cmt">/* ۴ مقدار: بالا راست پایین چپ (ساعتگرد) */</span>
+<span class="prop">margin</span><span class="punc">:</span> <span class="unit">10px 20px 30px 40px</span><span class="punc">;</span>
+
+<span class="cmt">/* ۲ مقدار: بالا‌وپایین | راست‌وچپ */</span>
+<span class="prop">padding</span><span class="punc">:</span> <span class="unit">10px 20px</span><span class="punc">;</span>
+
+<span class="cmt">/* ۱ مقدار: هر چهار طرف */</span>
+<span class="prop">margin</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span>
+
+<span class="cmt">/* جداگانه */</span>
+<span class="prop">margin-top</span><span class="punc">:</span> <span class="unit">10px</span><span class="punc">;</span>
+<span class="prop">padding-inline</span><span class="punc">:</span> <span class="unit">20px</span><span class="punc">;</span> <span class="cmt">/* راست+چپ منطقی (RTL/LTR) */</span></code></pre></div>
+
+      <h3>box-sizing — مهم‌ترین تنظیم باکس</h3>
+      <p>به‌صورت پیش‌فرض، <span class="kw">width</span> فقط عرض <b>محتوا</b> را تعیین می‌کند و padding و border به آن <b>اضافه</b> می‌شوند! این باعث محاسبات گیج‌کننده می‌شود.</p>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* پیش‌فرض: width = فقط محتوا */</span>
+<span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">content-box</span><span class="punc">;</span>
+<span class="cmt">عرض کل = width + padding + border</span>
+
+<span class="cmt">/* بهتر: width = کل جعبه (با padding و border) */</span>
+<span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">border-box</span><span class="punc">;</span>
+<span class="cmt">عرض کل = دقیقاً همان width</span>
+
+<span class="cmt">/* توصیه: روی همه عناصر اعمالش کن */</span>
+<span class="sel">*</span> <span class="punc">{</span> <span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">border-box</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+      <div class="box box-tip"><div class="box-title">💡 قانون شماره یک هر پروژه</div><p>تقریباً همه‌ی توسعه‌دهنده‌ها در ابتدای CSS این را می‌نویسند: <span class="kw">* { box-sizing: border-box; }</span>. زندگی‌ات را راحت می‌کند چون دیگر width دقیقاً همانی است که می‌نویسی.</p></div>
+
+      <h3>فروپاشی margin (Margin Collapse)</h3>
+      <p>یک رفتار عجیب: وقتی margin عمودی دو عنصر کنار هم قرار می‌گیرند، با هم جمع نمی‌شوند بلکه <b>بزرگ‌ترشان</b> برنده می‌شود. مثلاً margin-bottom پاراگراف ۲۰px و margin-top پاراگراف بعدی ۳۰px → فاصله نهایی ۳۰px (نه ۵۰px).</p>
+    </section>
+
+    <!-- ════════ فصل ۸: display ════════ -->
+    <section class="chapter" id="display">
+      <div class="chapter-header">
+        <span class="chapter-badge">۸</span>
+        <div>
+          <h2>display و جریان عناصر</h2>
+          <span class="sub">block، inline، inline-block، none و بیشتر</span>
+        </div>
+      </div>
+
+      <p>پراپرتی <span class="kw">display</span> تعیین می‌کند یک عنصر چطور در صفحه «جریان» پیدا کند و با بقیه چیدمان شود.</p>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">display: block</span><span class="tag-pill pill-layout">چیدمان</span><span class="tag-desc-head">کل عرض را می‌گیرد، خط جدید می‌سازد</span></div>
+        <div class="tag-card-body">
+          <p>عناصری مثل <span class="kw">div</span>، <span class="kw">p</span>، <span class="kw">h1</span> پیش‌فرض block هستند. می‌توانی width، height، margin عمودی بدهی.</p>
+          <div class="live-demo"><span class="live-label">block ↓</span>
+            <div class="demo-box dc1" style="margin-bottom:8px;">بلاک ۱</div>
+            <div class="demo-box dc2">بلاک ۲ (خط جدید)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">display: inline</span><span class="tag-pill pill-layout">چیدمان</span><span class="tag-desc-head">فقط اندازه محتوا، در یک خط</span></div>
+        <div class="tag-card-body">
+          <p>عناصری مثل <span class="kw">span</span>، <span class="kw">a</span>، <span class="kw">strong</span>. <b>width/height نمی‌گیرند</b> و margin عمودی هم اثر ندارد.</p>
+          <div class="live-demo"><span class="live-label">inline ↓</span>
+            <span class="demo-box dc3" style="display:inline;padding:4px 10px;">یک</span>
+            <span class="demo-box dc4" style="display:inline;padding:4px 10px;">دو</span>
+            <span class="demo-box dc5" style="display:inline;padding:4px 10px;">سه (همه یک خط)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">display: inline-block</span><span class="tag-pill pill-layout">چیدمان</span><span class="tag-desc-head">ترکیب هر دو</span></div>
+        <div class="tag-card-body">
+          <p>هم در یک خط می‌ماند (مثل inline) و هم width/height/margin می‌گیرد (مثل block). عالی برای دکمه‌ها و آیتم‌های منو.</p>
+          <div class="live-demo"><span class="live-label">inline-block ↓</span>
+            <span class="demo-box dc1" style="display:inline-block;width:90px;padding:14px 0;">۹۰px</span>
+            <span class="demo-box dc2" style="display:inline-block;width:120px;padding:14px 0;">۱۲۰px</span>
+          </div>
+        </div>
+      </div>
+
+      <table class="ref-table ltr">
+        <tr><th>مقدار</th><th>کاربرد</th></tr>
+        <tr><td class="mono">none</td><td>عنصر کاملاً ناپدید می‌شود (جا هم نمی‌گیرد)</td></tr>
+        <tr><td class="mono">flex</td><td>فعال‌سازی Flexbox (فصل ۱۵)</td></tr>
+        <tr><td class="mono">grid</td><td>فعال‌سازی Grid (فصل ۱۶)</td></tr>
+        <tr><td class="mono">inline-flex / inline-grid</td><td>نسخه inline آن‌ها</td></tr>
+        <tr><td class="mono">contents</td><td>خود جعبه را حذف، فرزندان را نگه می‌دارد</td></tr>
+      </table>
+      <div class="box box-note"><div class="box-title">📌 none در برابر visibility:hidden</div><p><span class="kw">display:none</span> عنصر را کاملاً حذف می‌کند (جا نمی‌گیرد). اما <span class="kw">visibility:hidden</span> آن را نامرئی می‌کند ولی <b>جایش را نگه می‌دارد</b>.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۹: position ════════ -->
+    <section class="chapter" id="position">
+      <div class="chapter-header">
+        <span class="chapter-badge">۹</span>
+        <div>
+          <h2>Positioning — موقعیت‌دهی</h2>
+          <span class="sub">عنصرها را دقیقاً هر جا که می‌خواهی بگذار</span>
+        </div>
+      </div>
+
+      <p>پراپرتی <span class="kw">position</span> همراه با <span class="kw">top/right/bottom/left</span> به تو کنترل دقیق موقعیت می‌دهد.</p>
+
+      <table class="ref-table ltr">
+        <tr><th>مقدار</th><th>رفتار</th></tr>
+        <tr><td class="mono">static</td><td>پیش‌فرض — جریان عادی، top/left اثر ندارد</td></tr>
+        <tr><td class="mono">relative</td><td>نسبت به جای <b>خودش</b> جابه‌جا می‌شود (جایش حفظ می‌ماند)</td></tr>
+        <tr><td class="mono">absolute</td><td>نسبت به نزدیک‌ترین والدِ position‌دار — از جریان خارج می‌شود</td></tr>
+        <tr><td class="mono">fixed</td><td>نسبت به پنجره مرورگر — با اسکرول حرکت نمی‌کند</td></tr>
+        <tr><td class="mono">sticky</td><td>ترکیب relative و fixed — تا یک نقطه عادی، بعد می‌چسبد</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* الگوی پرتکرار: فرزند absolute داخل والد relative */</span>
+<span class="sel">.card</span> <span class="punc">{</span> <span class="prop">position</span><span class="punc">:</span> <span class="val">relative</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">.badge</span> <span class="punc">{</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">absolute</span><span class="punc">;</span>
+  <span class="prop">top</span><span class="punc">:</span> <span class="unit">8px</span><span class="punc">;</span> <span class="prop">right</span><span class="punc">:</span> <span class="unit">8px</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cmt">/* هدر چسبان بالای صفحه */</span>
+<span class="sel">header</span> <span class="punc">{</span> <span class="prop">position</span><span class="punc">:</span> <span class="val">sticky</span><span class="punc">;</span> <span class="prop">top</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+
+      <h3>z-index — لایه‌بندی</h3>
+      <p>وقتی عناصر روی هم می‌افتند، <span class="kw">z-index</span> تعیین می‌کند کدام جلوتر باشد. عدد بزرگ‌تر = جلوتر. فقط روی عناصرِ position‌دار (غیر static) اثر دارد.</p>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.modal</span> <span class="punc">{</span> <span class="prop">position</span><span class="punc">:</span> <span class="val">fixed</span><span class="punc">;</span> <span class="prop">z-index</span><span class="punc">:</span> <span class="unit">1000</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">.overlay</span> <span class="punc">{</span> <span class="prop">z-index</span><span class="punc">:</span> <span class="unit">999</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+      <div class="box box-warn"><div class="box-title">⚠️ نکته‌ی z-index</div><p>z-index داخل «context»های جدا کار می‌کند. گاهی z-index بزرگ کار نمی‌کند چون والد یک stacking context جدا ساخته. حواست به <span class="kw">opacity</span>، <span class="kw">transform</span> و <span class="kw">filter</span> روی والد باشد.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۱۰: units ════════ -->
+    <section class="chapter" id="units">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۰</span>
+        <div>
+          <h2>واحدها (Units)</h2>
+          <span class="sub">px، em، rem، %، vw و خانواده‌ی بزرگ واحدها</span>
+        </div>
+      </div>
+
+      <p>وقتی می‌نویسی <span class="kw">width: 100</span>، CSS نمی‌فهمد ۱۰۰ چی! باید واحد بدهی. واحدها دو دسته‌اند: مطلق (ثابت) و نسبی (وابسته به چیز دیگر).</p>
+
+      <h3>واحدهای مطلق</h3>
+      <table class="ref-table ltr">
+        <tr><th>واحد</th><th>توضیح</th></tr>
+        <tr><td class="mono">px</td><td>پیکسل — رایج‌ترین، ثابت</td></tr>
+        <tr><td class="mono">cm, mm, in</td><td>سانتی‌متر، میلی‌متر، اینچ — بیشتر برای چاپ</td></tr>
+        <tr><td class="mono">pt, pc</td><td>point و pica — چاپ</td></tr>
+      </table>
+
+      <h3>واحدهای نسبی (مهم‌تر!)</h3>
+      <table class="ref-table ltr">
+        <tr><th>واحد</th><th>نسبت به چه؟</th></tr>
+        <tr><td class="mono">%</td><td>درصدی از والد</td></tr>
+        <tr><td class="mono">em</td><td>font-size عنصرِ فعلی (یا والد)</td></tr>
+        <tr><td class="mono">rem</td><td>font-size عنصر ریشه (html) — توصیه‌شده</td></tr>
+        <tr><td class="mono">vw / vh</td><td>۱٪ عرض / ارتفاع viewport</td></tr>
+        <tr><td class="mono">vmin / vmax</td><td>۱٪ کوچک‌ترین / بزرگ‌ترین بُعد viewport</td></tr>
+        <tr><td class="mono">ch</td><td>عرض کاراکتر «0»</td></tr>
+        <tr><td class="mono">fr</td><td>کسری از فضای آزاد (مخصوص Grid)</td></tr>
+        <tr><td class="mono">dvh / svh / lvh</td><td>ارتفاع viewport پویا/کوچک/بزرگ موبایل (نوین)</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">html</span> <span class="punc">{</span> <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">16px</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">h1</span>   <span class="punc">{</span> <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">2rem</span><span class="punc">;</span> <span class="punc">}</span>  <span class="cmt">/* = 32px (2×16) */</span>
+<span class="sel">.box</span> <span class="punc">{</span> <span class="prop">width</span><span class="punc">:</span> <span class="unit">50%</span><span class="punc">;</span> <span class="prop">height</span><span class="punc">:</span> <span class="unit">100vh</span><span class="punc">;</span> <span class="punc">}</span>  <span class="cmt">/* تمام ارتفاع صفحه */</span></code></pre></div>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 rem چرا بهتر از em است؟</div>
+        <p><span class="kw">em</span> به والد وابسته است و در عناصر تودرتو ضرب می‌شود (می‌تواند غیرقابل‌پیش‌بینی شود). <span class="kw">rem</span> همیشه به ریشه برمی‌گردد، پس قابل پیش‌بینی است. برای فونت‌ها از rem استفاده کن.</p>
+      </div>
+      <div class="box box-future">
+        <div class="box-title">🔮 واحدهای نوین موبایل</div>
+        <p>در موبایل، نوار آدرس مرورگر باز و بسته می‌شود و <span class="kw">100vh</span> دردسرساز است. واحدهای جدید <span class="kw">dvh</span> (پویا)، <span class="kw">svh</span> (کوچک) و <span class="kw">lvh</span> (بزرگ) این مشکل را حل کرده‌اند.</p>
+      </div>
+    </section>
+
+
+    <!-- ════════ فصل ۱۱: رنگ‌ها ════════ -->
+    <section class="chapter" id="colors">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۱</span>
+        <div>
+          <h2>رنگ‌ها در CSS</h2>
+          <span class="sub">هفت روش برای گفتن یک رنگ</span>
+        </div>
+      </div>
+
+      <p>CSS راه‌های مختلفی برای تعریف رنگ دارد. همه به یک رنگ ختم می‌شوند اما هرکدام مزیتی دارد.</p>
+
+      <table class="ref-table ltr">
+        <tr><th>روش</th><th>مثال</th><th>توضیح</th></tr>
+        <tr><td>نام</td><td class="mono">red, tomato</td><td>۱۴۸ نام آماده</td></tr>
+        <tr><td>HEX</td><td class="mono">#ff0000</td><td>شانزده‌شانزدهی RGB</td></tr>
+        <tr><td>HEX + آلفا</td><td class="mono">#ff000080</td><td>۸ رقمی با شفافیت</td></tr>
+        <tr><td>RGB</td><td class="mono">rgb(255 0 0)</td><td>قرمز/سبز/آبی ۰-۲۵۵</td></tr>
+        <tr><td>RGBA</td><td class="mono">rgb(255 0 0 / 50%)</td><td>با شفافیت</td></tr>
+        <tr><td>HSL</td><td class="mono">hsl(0 100% 50%)</td><td>رنگ/اشباع/روشنایی — انسانی‌تر</td></tr>
+        <tr><td>HWB / LAB / LCH</td><td class="mono">oklch(...)</td><td>فضاهای رنگی نوین</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — همه قرمزِ نیمه‌شفاف</span></div>
+<pre><code><span class="prop">color</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="val">#ff0000</span><span class="punc">;</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="func">rgb(</span><span class="unit">255 0 0</span> <span class="punc">/</span> <span class="unit">50%</span><span class="func">)</span><span class="punc">;</span>   <span class="cmt">/* سینتکس مدرن */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="func">rgba(</span><span class="unit">255, 0, 0, 0.5</span><span class="func">)</span><span class="punc">;</span>   <span class="cmt">/* سینتکس قدیمی */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="func">hsl(</span><span class="unit">0 100% 50%</span> <span class="punc">/</span> <span class="unit">.5</span><span class="func">)</span><span class="punc">;</span></code></pre></div>
+
+      <div class="live-demo"><span class="live-label">پالت زنده ↓</span>
+        <div class="demo-flex">
+          <div class="demo-box" style="background:#ff0000;flex:1;">HEX</div>
+          <div class="demo-box" style="background:rgb(34,211,238);flex:1;">RGB</div>
+          <div class="demo-box" style="background:hsl(280 70% 60%);flex:1;">HSL</div>
+          <div class="demo-box" style="background:rgba(244,114,182,.6);flex:1;color:#111;">RGBA</div>
+        </div>
+      </div>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 چرا HSL محبوب است؟</div>
+        <p>در HSL فقط با تغییر عدد روشنایی (L) می‌توانی سایه‌های روشن‌تر و تیره‌تر یک رنگ بسازی، بدون اینکه کل رنگ را عوض کنی. برای ساخت پالت رنگی عالی است.</p>
+      </div>
+      <div class="box box-future">
+        <div class="box-title">🔮 oklch — آینده‌ی رنگ</div>
+        <p>فضاهای رنگی جدید مثل <span class="kw">oklch()</span> رنگ‌های زنده‌تر و یکنواخت‌تری نسبت به دید انسان می‌دهند و در مرورگرهای مدرن پشتیبانی می‌شوند.</p>
+      </div>
+
+      <h3>currentColor و شفافیت</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.icon</span> <span class="punc">{</span> <span class="prop">border</span><span class="punc">:</span> <span class="unit">1px</span> <span class="val">solid currentColor</span><span class="punc">;</span> <span class="punc">}</span> <span class="cmt">/* همان رنگ متن */</span>
+<span class="sel">.faded</span> <span class="punc">{</span> <span class="prop">opacity</span><span class="punc">:</span> <span class="unit">0.5</span><span class="punc">;</span> <span class="punc">}</span> <span class="cmt">/* شفافیت کل عنصر */</span></code></pre></div>
+    </section>
+
+    <!-- ════════ فصل ۱۲: بک‌گراند ════════ -->
+    <section class="chapter" id="background">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۲</span>
+        <div>
+          <h2>پس‌زمینه (Background)</h2>
+          <span class="sub">رنگ، تصویر، گرادیان و کنترل کامل</span>
+        </div>
+      </div>
+
+      <p>پس‌زمینه یکی از پرکاربردترین قابلیت‌های CSS است. می‌توانی رنگ، عکس، چند لایه و گرادیان داشته باشی.</p>
+
+      <table class="ref-table ltr">
+        <tr><th>پراپرتی</th><th>کاربرد</th></tr>
+        <tr><td class="mono">background-color</td><td>رنگ پس‌زمینه</td></tr>
+        <tr><td class="mono">background-image</td><td>تصویر یا گرادیان</td></tr>
+        <tr><td class="mono">background-repeat</td><td>تکرار: repeat / no-repeat / repeat-x</td></tr>
+        <tr><td class="mono">background-position</td><td>محل تصویر: center / top right / 50% 20%</td></tr>
+        <tr><td class="mono">background-size</td><td>cover / contain / 100px</td></tr>
+        <tr><td class="mono">background-attachment</td><td>fixed (پارالاکس) / scroll</td></tr>
+        <tr><td class="mono">background</td><td>شورت‌هند همه با هم</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.hero</span> <span class="punc">{</span>
+  <span class="prop">background-image</span><span class="punc">:</span> <span class="func">url(</span><span class="val">"bg.jpg"</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">background-size</span><span class="punc">:</span> <span class="val">cover</span><span class="punc">;</span>     <span class="cmt">/* پر کردن کامل بدون اعوجاج */</span>
+  <span class="prop">background-position</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>
+  <span class="prop">background-repeat</span><span class="punc">:</span> <span class="val">no-repeat</span><span class="punc">;</span>
+  <span class="cmt">/* شورت‌هند معادل: */</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="func">url(</span><span class="val">"bg.jpg"</span><span class="func">)</span> <span class="val">center</span><span class="punc">/</span><span class="val">cover no-repeat</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <h3>گرادیان‌ها (Gradients)</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* خطی */</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="func">linear-gradient(</span><span class="unit">90deg</span><span class="punc">,</span> <span class="val">red</span><span class="punc">,</span> <span class="val">blue</span><span class="func">)</span><span class="punc">;</span>
+<span class="cmt">/* شعاعی (دایره‌ای) */</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="func">radial-gradient(</span><span class="val">circle</span><span class="punc">,</span> <span class="val">yellow</span><span class="punc">,</span> <span class="val">orange</span><span class="func">)</span><span class="punc">;</span>
+<span class="cmt">/* مخروطی (چرخان) */</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="func">conic-gradient(</span><span class="val">red</span><span class="punc">,</span> <span class="val">green</span><span class="punc">,</span> <span class="val">blue</span><span class="punc">,</span> <span class="val">red</span><span class="func">)</span><span class="punc">;</span>
+<span class="cmt">/* با نقاط توقف دقیق */</span>
+<span class="prop">background</span><span class="punc">:</span> <span class="func">linear-gradient(</span><span class="val">red</span> <span class="unit">0%</span><span class="punc">,</span> <span class="val">red</span> <span class="unit">50%</span><span class="punc">,</span> <span class="val">blue</span> <span class="unit">50%</span><span class="func">)</span><span class="punc">;</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">گرادیان‌های زنده ↓</span>
+        <div class="demo-flex">
+          <div class="demo-box" style="background:linear-gradient(90deg,#22d3ee,#a78bfa);flex:1;">linear</div>
+          <div class="demo-box" style="background:radial-gradient(circle,#fbbf24,#fb923c);flex:1;">radial</div>
+          <div class="demo-box" style="background:conic-gradient(#f472b6,#a78bfa,#22d3ee,#f472b6);flex:1;">conic</div>
+        </div>
+      </div>
+      <div class="box box-note"><div class="box-title">📌 چند پس‌زمینه</div><p>می‌توانی چند تصویر/گرادیان را با کاما روی هم بگذاری. اولی بالاترین لایه است: <span class="kw">background: linear-gradient(...), url(bg.png);</span></p></div>
+    </section>
+
+    <!-- ════════ فصل ۱۳: تایپوگرافی ════════ -->
+    <section class="chapter" id="typography">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۳</span>
+        <div>
+          <h2>تایپوگرافی و متن</h2>
+          <span class="sub">کنترل کامل فونت و نمایش متن</span>
+        </div>
+      </div>
+
+      <table class="ref-table ltr">
+        <tr><th>پراپرتی</th><th>کاربرد</th></tr>
+        <tr><td class="mono">font-family</td><td>نوع فونت (با fallback)</td></tr>
+        <tr><td class="mono">font-size</td><td>اندازه فونت</td></tr>
+        <tr><td class="mono">font-weight</td><td>ضخامت: 100–900 یا normal/bold</td></tr>
+        <tr><td class="mono">font-style</td><td>normal / italic / oblique</td></tr>
+        <tr><td class="mono">line-height</td><td>ارتفاع خط (فاصله خطوط)</td></tr>
+        <tr><td class="mono">letter-spacing</td><td>فاصله حروف</td></tr>
+        <tr><td class="mono">word-spacing</td><td>فاصله کلمات</td></tr>
+        <tr><td class="mono">text-align</td><td>چینش: right / center / justify</td></tr>
+        <tr><td class="mono">text-decoration</td><td>underline / line-through / none</td></tr>
+        <tr><td class="mono">text-transform</td><td>uppercase / lowercase / capitalize</td></tr>
+        <tr><td class="mono">text-indent</td><td>تورفتگی خط اول</td></tr>
+        <tr><td class="mono">text-shadow</td><td>سایه متن</td></tr>
+        <tr><td class="mono">white-space</td><td>nowrap / pre / pre-wrap</td></tr>
+        <tr><td class="mono">text-overflow</td><td>ellipsis (سه‌نقطه برای متن بلند)</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">body</span> <span class="punc">{</span>
+  <span class="prop">font-family</span><span class="punc">:</span> <span class="val">"Vazirmatn", Tahoma, sans-serif</span><span class="punc">;</span> <span class="cmt">/* fallback مهم! */</span>
+  <span class="prop">font-size</span><span class="punc">:</span> <span class="unit">16px</span><span class="punc">;</span>
+  <span class="prop">line-height</span><span class="punc">:</span> <span class="unit">1.7</span><span class="punc">;</span>   <span class="cmt">/* بدون واحد = ضریب فونت */</span>
+<span class="punc">}</span>
+<span class="cmt">/* شورت‌هند font (ترتیب مهم است) */</span>
+<span class="sel">h1</span> <span class="punc">{</span> <span class="prop">font</span><span class="punc">:</span> <span class="val">bold</span> <span class="unit">2rem</span><span class="punc">/</span><span class="unit">1.2</span> <span class="val">Tahoma</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+
+      <h3>فونت سفارشی با @font-face</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="atrule">@font-face</span> <span class="punc">{</span>
+  <span class="prop">font-family</span><span class="punc">:</span> <span class="val">"MyFont"</span><span class="punc">;</span>
+  <span class="prop">src</span><span class="punc">:</span> <span class="func">url(</span><span class="val">"myfont.woff2"</span><span class="func">)</span> <span class="func">format(</span><span class="val">"woff2"</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">font-display</span><span class="punc">:</span> <span class="val">swap</span><span class="punc">;</span> <span class="cmt">/* جلوگیری از متن نامرئی */</span>
+<span class="punc">}</span></code></pre></div>
+
+      <h3>متن چندخطی با سه‌نقطه</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* یک خط با سه‌نقطه */</span>
+<span class="sel">.ellipsis</span> <span class="punc">{</span>
+  <span class="prop">white-space</span><span class="punc">:</span> <span class="val">nowrap</span><span class="punc">;</span>
+  <span class="prop">overflow</span><span class="punc">:</span> <span class="val">hidden</span><span class="punc">;</span>
+  <span class="prop">text-overflow</span><span class="punc">:</span> <span class="val">ellipsis</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="cmt">/* چند خط (مثلاً ۳ خط) */</span>
+<span class="sel">.clamp</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">-webkit-box</span><span class="punc">;</span>
+  <span class="prop">-webkit-line-clamp</span><span class="punc">:</span> <span class="unit">3</span><span class="punc">;</span>
+  <span class="prop">-webkit-box-orient</span><span class="punc">:</span> <span class="val">vertical</span><span class="punc">;</span>
+  <span class="prop">overflow</span><span class="punc">:</span> <span class="val">hidden</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+      <div class="box box-tip"><div class="box-title">💡 line-height بدون واحد</div><p>همیشه line-height را بدون واحد بنویس (مثل <span class="kw">1.6</span>) نه با px. اینطوری متناسب با اندازه فونت هر عنصر تنظیم می‌شود.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۱۴: بوردر و سایه ════════ -->
+    <section class="chapter" id="border">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۴</span>
+        <div>
+          <h2>بوردر، گوشه و سایه</h2>
+          <span class="sub">border، border-radius، box-shadow و outline</span>
+        </div>
+      </div>
+
+      <h3>border</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* شورت‌هند: ضخامت | نوع | رنگ */</span>
+<span class="prop">border</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid</span> <span class="val">#22d3ee</span><span class="punc">;</span>
+<span class="prop">border-top</span><span class="punc">:</span> <span class="unit">1px</span> <span class="val">dashed red</span><span class="punc">;</span> <span class="cmt">/* فقط بالا */</span>
+<span class="cmt">/* انواع: solid, dashed, dotted, double, groove, ridge, inset, outset */</span></code></pre></div>
+
+      <h3>border-radius — گوشه‌های گرد</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="prop">border-radius</span><span class="punc">:</span> <span class="unit">12px</span><span class="punc">;</span>        <span class="cmt">/* هر چهار گوشه */</span>
+<span class="prop">border-radius</span><span class="punc">:</span> <span class="unit">10px 0 10px 0</span><span class="punc">;</span> <span class="cmt">/* هر گوشه جدا */</span>
+<span class="prop">border-radius</span><span class="punc">:</span> <span class="unit">50%</span><span class="punc">;</span>         <span class="cmt">/* دایره کامل! */</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">شکل‌های زنده ↓</span>
+        <div class="demo-flex">
+          <div class="demo-box dc1" style="width:80px;height:80px;border-radius:12px;line-height:80px;padding:0;">12px</div>
+          <div class="demo-box dc2" style="width:80px;height:80px;border-radius:50%;line-height:80px;padding:0;">دایره</div>
+          <div class="demo-box dc3" style="width:80px;height:80px;border-radius:10px 40px 10px 40px;line-height:80px;padding:0;">میکس</div>
+        </div>
+      </div>
+
+      <h3>box-shadow — سایه جعبه</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* X | Y | تاری | گسترش | رنگ */</span>
+<span class="prop">box-shadow</span><span class="punc">:</span> <span class="unit">0 4px 12px</span> <span class="func">rgba(</span><span class="unit">0,0,0,.2</span><span class="func">)</span><span class="punc">;</span>
+<span class="cmt">/* سایه داخلی */</span>
+<span class="prop">box-shadow</span><span class="punc">:</span> <span class="val">inset</span> <span class="unit">0 0 10px</span> <span class="val">black</span><span class="punc">;</span>
+<span class="cmt">/* چند سایه با کاما */</span>
+<span class="prop">box-shadow</span><span class="punc">:</span> <span class="unit">0 2px 4px #0003</span><span class="punc">,</span> <span class="unit">0 8px 16px #0002</span><span class="punc">;</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">سایه‌های زنده ↓</span>
+        <div class="demo-flex" style="padding:10px;">
+          <div style="flex:1;background:#fff;color:#111;padding:20px;border-radius:10px;text-align:center;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.25);">نرم</div>
+          <div style="flex:1;background:#fff;color:#111;padding:20px;border-radius:10px;text-align:center;font-weight:700;box-shadow:0 12px 30px rgba(124,58,237,.4);">رنگی</div>
+          <div style="flex:1;background:#fff;color:#111;padding:20px;border-radius:10px;text-align:center;font-weight:700;box-shadow:inset 0 0 12px rgba(0,0,0,.3);">داخلی</div>
+        </div>
+      </div>
+
+      <div class="box box-note"><div class="box-title">📌 outline در برابر border</div><p><span class="kw">outline</span> شبیه border است اما <b>جای اشغال نمی‌کند</b> و باکس را جابه‌جا نمی‌کند. برای حالت <span class="kw">:focus</span> عالی است (و برای دسترسی‌پذیری حذفش نکن!).</p></div>
+    </section>
+
+
+    <!-- ════════ فصل ۱۵: Flexbox ════════ -->
+    <section class="chapter" id="flexbox">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۵</span>
+        <div>
+          <h2>Flexbox — چیدمان انعطاف‌پذیر</h2>
+          <span class="sub">قدرتمندترین ابزار چیدمان یک‌بعدی</span>
+        </div>
+      </div>
+
+      <p>Flexbox برای چیدمان عناصر در <b>یک ردیف یا یک ستون</b> ساخته شده. وسط‌چین کردن، توزیع فضا و ترتیب‌دهی را بی‌نهایت ساده می‌کند. کافیست به والد <span class="kw">display: flex</span> بدهی.</p>
+
+      <h3>مفهوم محورها</h3>
+      <ul>
+        <li><b>محور اصلی (Main axis):</b> جهتی که آیتم‌ها در آن می‌چینند (با <span class="kw">flex-direction</span> تعیین می‌شود).</li>
+        <li><b>محور متقاطع (Cross axis):</b> عمود بر محور اصلی.</li>
+      </ul>
+
+      <h3>پراپرتی‌های والد (Container)</h3>
+      <table class="ref-table ltr">
+        <tr><th>پراپرتی</th><th>کاربرد</th></tr>
+        <tr><td class="mono">display: flex</td><td>فعال‌سازی</td></tr>
+        <tr><td class="mono">flex-direction</td><td>row / row-reverse / column / column-reverse</td></tr>
+        <tr><td class="mono">flex-wrap</td><td>nowrap / wrap (شکستن به خط بعد)</td></tr>
+        <tr><td class="mono">justify-content</td><td>چینش در محور اصلی</td></tr>
+        <tr><td class="mono">align-items</td><td>چینش در محور متقاطع</td></tr>
+        <tr><td class="mono">align-content</td><td>چینش خطوط چندگانه</td></tr>
+        <tr><td class="mono">gap</td><td>فاصله بین آیتم‌ها</td></tr>
+      </table>
+
+      <h3>justify-content (محور اصلی)</h3>
+      <table class="ref-table ltr">
+        <tr><td class="mono">flex-start</td><td>ابتدا</td></tr>
+        <tr><td class="mono">center</td><td>وسط</td></tr>
+        <tr><td class="mono">flex-end</td><td>انتها</td></tr>
+        <tr><td class="mono">space-between</td><td>فاصله بین، بدون فاصله لبه</td></tr>
+        <tr><td class="mono">space-around</td><td>فاصله دور هر آیتم</td></tr>
+        <tr><td class="mono">space-evenly</td><td>فاصله کاملاً مساوی</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — وسط‌چین کامل (پرکاربردترین!)</span></div>
+<pre><code><span class="sel">.center</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">flex</span><span class="punc">;</span>
+  <span class="prop">justify-content</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>  <span class="cmt">/* افقی */</span>
+  <span class="prop">align-items</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span>      <span class="cmt">/* عمودی */</span>
+  <span class="prop">min-height</span><span class="punc">:</span> <span class="unit">100vh</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <div class="live-demo"><span class="live-label">justify-content: space-between ↓</span>
+        <div style="display:flex;justify-content:space-between;gap:8px;">
+          <div class="demo-box dc1" style="padding:14px 18px;">۱</div>
+          <div class="demo-box dc2" style="padding:14px 18px;">۲</div>
+          <div class="demo-box dc3" style="padding:14px 18px;">۳</div>
+        </div>
+      </div>
+      <div class="live-demo"><span class="live-label">justify-content: center + align-items: center ↓</span>
+        <div style="display:flex;justify-content:center;align-items:center;gap:8px;height:90px;background:rgba(255,255,255,.04);border-radius:8px;">
+          <div class="demo-box dc4" style="padding:10px 16px;">وسط</div>
+          <div class="demo-box dc5" style="padding:20px 16px;">چین</div>
+        </div>
+      </div>
+
+      <h3>پراپرتی‌های فرزند (Items)</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.item</span> <span class="punc">{</span>
+  <span class="prop">flex-grow</span><span class="punc">:</span> <span class="unit">1</span><span class="punc">;</span>    <span class="cmt">/* چقدر فضای اضافه بگیرد */</span>
+  <span class="prop">flex-shrink</span><span class="punc">:</span> <span class="unit">1</span><span class="punc">;</span>  <span class="cmt">/* چقدر کوچک شود */</span>
+  <span class="prop">flex-basis</span><span class="punc">:</span> <span class="unit">200px</span><span class="punc">;</span> <span class="cmt">/* اندازه پایه */</span>
+  <span class="cmt">/* شورت‌هند: grow shrink basis */</span>
+  <span class="prop">flex</span><span class="punc">:</span> <span class="unit">1 1 200px</span><span class="punc">;</span>
+  <span class="prop">align-self</span><span class="punc">:</span> <span class="val">flex-end</span><span class="punc">;</span> <span class="cmt">/* فقط این آیتم */</span>
+  <span class="prop">order</span><span class="punc">:</span> <span class="unit">2</span><span class="punc">;</span>        <span class="cmt">/* تغییر ترتیب نمایش */</span>
+<span class="punc">}</span></code></pre></div>
+      <div class="box box-tip"><div class="box-title">💡 flex: 1 جادویی</div><p>نوشتن <span class="kw">flex: 1</span> روی همه‌ی آیتم‌ها باعث می‌شود فضا را <b>به‌طور مساوی</b> بین خودشان تقسیم کنند. ساده‌ترین راه برای ستون‌های هم‌عرض.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۱۶: Grid ════════ -->
+    <section class="chapter" id="grid">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۶</span>
+        <div>
+          <h2>CSS Grid — چیدمان دوبعدی</h2>
+          <span class="sub">سطر و ستون را همزمان کنترل کن</span>
+        </div>
+      </div>
+
+      <p>اگر Flexbox برای یک خط است، Grid برای چیدمان <b>دوبعدی</b> (سطر <b>و</b> ستون با هم) است. قدرتمندترین سیستم چیدمان CSS برای صفحه‌بندی کامل.</p>
+
+      <h3>تعریف شبکه</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.grid</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+  <span class="cmt">/* ۳ ستون مساوی */</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="unit">1fr 1fr 1fr</span><span class="punc">;</span>
+  <span class="cmt">/* یا کوتاه‌تر: */</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="func">repeat(</span><span class="unit">3, 1fr</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">grid-template-rows</span><span class="punc">:</span> <span class="unit">100px auto</span><span class="punc">;</span>
+  <span class="prop">gap</span><span class="punc">:</span> <span class="unit">16px</span><span class="punc">;</span>  <span class="cmt">/* فاصله سلول‌ها */</span>
+<span class="punc">}</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">repeat(3, 1fr) ↓</span>
+        <div class="demo-grid-3">
+          <div class="demo-box dc1" style="padding:18px 0;">۱</div>
+          <div class="demo-box dc2" style="padding:18px 0;">۲</div>
+          <div class="demo-box dc3" style="padding:18px 0;">۳</div>
+          <div class="demo-box dc4" style="padding:18px 0;">۴</div>
+          <div class="demo-box dc5" style="padding:18px 0;">۵</div>
+          <div class="demo-box dc6" style="padding:18px 0;">۶</div>
+        </div>
+      </div>
+
+      <h3>واحد fr و توابع کمکی</h3>
+      <table class="ref-table ltr">
+        <tr><th>الگو</th><th>یعنی</th></tr>
+        <tr><td class="mono">1fr 2fr</td><td>ستون دوم دو برابر اولی</td></tr>
+        <tr><td class="mono">repeat(4, 1fr)</td><td>۴ ستون مساوی</td></tr>
+        <tr><td class="mono">minmax(100px, 1fr)</td><td>حداقل ۱۰۰px، حداکثر کشسان</td></tr>
+        <tr><td class="mono">auto-fit / auto-fill</td><td>تعداد ستون خودکار</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — گرید ریسپانسیو بدون media query!</span></div>
+<pre><code><span class="sel">.cards</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+  <span class="prop">grid-template-columns</span><span class="punc">:</span> <span class="func">repeat(</span><span class="val">auto-fit</span><span class="punc">,</span> <span class="func">minmax(</span><span class="unit">200px, 1fr</span><span class="func">)</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">gap</span><span class="punc">:</span> <span class="unit">20px</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="cmt">/* خودش تعداد ستون را با عرض صفحه تنظیم می‌کند! */</span></code></pre></div>
+
+      <h3>جای‌گذاری آیتم‌ها</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.hero</span> <span class="punc">{</span>
+  <span class="prop">grid-column</span><span class="punc">:</span> <span class="unit">1 / 3</span><span class="punc">;</span>  <span class="cmt">/* از خط ۱ تا ۳ (۲ ستون) */</span>
+  <span class="prop">grid-row</span><span class="punc">:</span> <span class="unit">1 / 2</span><span class="punc">;</span>
+  <span class="cmt">/* یا با span: */</span>
+  <span class="prop">grid-column</span><span class="punc">:</span> <span class="val">span</span> <span class="unit">2</span><span class="punc">;</span>   <span class="cmt">/* ۲ ستون اشغال کن */</span>
+<span class="punc">}</span></code></pre></div>
+
+      <h3>نواحی نام‌گذاری‌شده (Template Areas)</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — چیدمان کامل صفحه</span></div>
+<pre><code><span class="sel">.page</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+  <span class="prop">grid-template-areas</span><span class="punc">:</span>
+    <span class="val">"header header"</span>
+    <span class="val">"sidebar main"</span>
+    <span class="val">"footer footer"</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="sel">header</span>  <span class="punc">{</span> <span class="prop">grid-area</span><span class="punc">:</span> <span class="val">header</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">.side</span>   <span class="punc">{</span> <span class="prop">grid-area</span><span class="punc">:</span> <span class="val">sidebar</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+      <div class="box box-tip"><div class="box-title">💡 Grid یا Flexbox؟</div><p>قانون ساده: برای چیدمان <b>یک‌بُعدی</b> (یک ردیف یا ستون مثل منو) Flexbox، برای چیدمان <b>دوبُعدی</b> (شبکه کامل مثل گالری یا صفحه‌بندی) Grid. اغلب با هم ترکیبشان می‌کنیم.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۱۷: Responsive ════════ -->
+    <section class="chapter" id="responsive">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۷</span>
+        <div>
+          <h2>طراحی ریسپانسیو</h2>
+          <span class="sub">یک سایت برای همه دستگاه‌ها — موبایل تا دسکتاپ</span>
+        </div>
+      </div>
+
+      <p>ریسپانسیو یعنی صفحه‌ات روی هر اندازه‌ی صفحه‌نمایش (موبایل، تبلت، لپ‌تاپ، تلویزیون) خوب دیده شود. ابزار اصلی: <span class="kw">@media</span> queries.</p>
+
+      <h3>گام صفر: متا viewport (در HTML)</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">HTML — بدون این، ریسپانسیو کار نمی‌کند!</span></div>
+<pre><code><span class="atrule">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="atrule">&gt;</span></code></pre></div>
+
+      <h3>Media Queries</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* استایل پایه برای موبایل (Mobile-first) */</span>
+<span class="sel">.container</span> <span class="punc">{</span> <span class="prop">width</span><span class="punc">:</span> <span class="unit">100%</span><span class="punc">;</span> <span class="punc">}</span>
+
+<span class="cmt">/* تبلت به بالا */</span>
+<span class="atrule">@media</span> <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">768px</span><span class="punc">)</span> <span class="punc">{</span>
+  <span class="sel">.container</span> <span class="punc">{</span> <span class="prop">width</span><span class="punc">:</span> <span class="unit">750px</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="punc">}</span>
+<span class="cmt">/* دسکتاپ به بالا */</span>
+<span class="atrule">@media</span> <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">1024px</span><span class="punc">)</span> <span class="punc">{</span>
+  <span class="sel">.container</span> <span class="punc">{</span> <span class="prop">width</span><span class="punc">:</span> <span class="unit">980px</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="punc">}</span></code></pre></div>
+
+      <table class="ref-table ltr">
+        <tr><th>شرط</th><th>یعنی</th></tr>
+        <tr><td class="mono">min-width: 768px</td><td>صفحه ۷۶۸px یا بزرگ‌تر</td></tr>
+        <tr><td class="mono">max-width: 767px</td><td>صفحه ۷۶۷px یا کوچک‌تر</td></tr>
+        <tr><td class="mono">orientation: landscape</td><td>افقی</td></tr>
+        <tr><td class="mono">prefers-color-scheme: dark</td><td>کاربر تم تاریک می‌خواهد</td></tr>
+        <tr><td class="mono">prefers-reduced-motion</td><td>کاربر انیمیشن کم می‌خواهد</td></tr>
+        <tr><td class="mono">hover: hover</td><td>دستگاه قابلیت hover دارد</td></tr>
+      </table>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 رویکرد Mobile-First</div>
+        <p>اول برای موبایل بنویس (بدون media query)، بعد با <span class="kw">min-width</span> برای صفحه‌های بزرگ‌تر اضافه کن. این روش سبک‌تر، سریع‌تر و حرفه‌ای‌تر است.</p>
+      </div>
+
+      <h3>ابزارهای ریسپانسیو بدون media query</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* clamp: حداقل، ایده‌آل، حداکثر — فونت سیال */</span>
+<span class="prop">font-size</span><span class="punc">:</span> <span class="func">clamp(</span><span class="unit">1rem, 2.5vw, 2rem</span><span class="func">)</span><span class="punc">;</span>
+
+<span class="cmt">/* عکس و ویدیو کشسان */</span>
+<span class="sel">img</span> <span class="punc">{</span> <span class="prop">max-width</span><span class="punc">:</span> <span class="unit">100%</span><span class="punc">;</span> <span class="prop">height</span><span class="punc">:</span> <span class="val">auto</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+
+      <div class="box box-future">
+        <div class="box-title">🔮 Container Queries — نسل بعد</div>
+        <p>به‌جای واکنش به اندازه‌ی کل صفحه، حالا می‌توانی به اندازه‌ی <b>والدِ</b> یک عنصر واکنش نشان دهی! با <span class="kw">container-type</span> و <span class="kw">@container</span>. آینده‌ی طراحی کامپوننت‌محور.</p>
+      </div>
+    </section>
+
+
+    <!-- ════════ فصل ۱۸: Transform ════════ -->
+    <section class="chapter" id="transform">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۸</span>
+        <div>
+          <h2>Transform — تبدیل‌ها</h2>
+          <span class="sub">جابه‌جایی، چرخش، مقیاس و کجی</span>
+        </div>
+      </div>
+
+      <p><span class="kw">transform</span> به تو اجازه می‌دهد عنصر را بدون به‌هم‌ریختن چیدمان بقیه، حرکت دهی، بچرخانی، بزرگ/کوچک یا کج کنی. سریع و بهینه (با GPU).</p>
+
+      <table class="ref-table ltr">
+        <tr><th>تابع</th><th>کاربرد</th></tr>
+        <tr><td class="mono">translate(x, y)</td><td>جابه‌جایی</td></tr>
+        <tr><td class="mono">translateX / translateY / translateZ</td><td>جابه‌جایی یک محور</td></tr>
+        <tr><td class="mono">rotate(45deg)</td><td>چرخش</td></tr>
+        <tr><td class="mono">scale(1.5)</td><td>بزرگ‌نمایی</td></tr>
+        <tr><td class="mono">skew(10deg)</td><td>کج کردن</td></tr>
+        <tr><td class="mono">matrix(...)</td><td>همه با هم (سطح پایین)</td></tr>
+        <tr><td class="mono">perspective() / rotate3d()</td><td>سه‌بعدی</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.box</span> <span class="punc">{</span>
+  <span class="prop">transform</span><span class="punc">:</span> <span class="func">translate(</span><span class="unit">20px, 0</span><span class="func">)</span> <span class="func">rotate(</span><span class="unit">15deg</span><span class="func">)</span> <span class="func">scale(</span><span class="unit">1.2</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">transform-origin</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span> <span class="cmt">/* نقطه مرجع تبدیل */</span>
+<span class="punc">}</span>
+<span class="cmt">/* ترفند وسط‌چینِ مطلق: */</span>
+<span class="sel">.centered</span> <span class="punc">{</span>
+  <span class="prop">position</span><span class="punc">:</span> <span class="val">absolute</span><span class="punc">;</span>
+  <span class="prop">top</span><span class="punc">:</span> <span class="unit">50%</span><span class="punc">;</span> <span class="prop">left</span><span class="punc">:</span> <span class="unit">50%</span><span class="punc">;</span>
+  <span class="prop">transform</span><span class="punc">:</span> <span class="func">translate(</span><span class="unit">-50%, -50%</span><span class="func">)</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">transform زنده ↓</span>
+        <div class="demo-flex" style="padding:16px 0;">
+          <div class="demo-box dc1" style="padding:14px 18px;transform:rotate(-12deg);">rotate</div>
+          <div class="demo-box dc2" style="padding:14px 18px;transform:scale(1.2);">scale</div>
+          <div class="demo-box dc3" style="padding:14px 18px;transform:skewX(-15deg);">skew</div>
+          <div class="demo-box dc4" style="padding:14px 18px;transform:translateY(-10px);">translateY</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ فصل ۱۹: Transition ════════ -->
+    <section class="chapter" id="transition">
+      <div class="chapter-header">
+        <span class="chapter-badge">۱۹</span>
+        <div>
+          <h2>Transition — انتقال نرم</h2>
+          <span class="sub">تغییرات را نرم و زیبا کن</span>
+        </div>
+      </div>
+
+      <p>وقتی یک پراپرتی تغییر می‌کند (مثلاً در hover)، transition باعث می‌شود تغییر <b>به‌جای ناگهانی، نرم و تدریجی</b> باشد. مهم‌ترین ابزار تعامل بصری.</p>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.btn</span> <span class="punc">{</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="val">blue</span><span class="punc">;</span>
+  <span class="cmt">/* پراپرتی | مدت | تابع زمان | تأخیر */</span>
+  <span class="prop">transition</span><span class="punc">:</span> <span class="prop">background</span> <span class="unit">0.3s</span> <span class="val">ease</span> <span class="unit">0s</span><span class="punc">;</span>
+<span class="punc">}</span>
+<span class="sel">.btn:hover</span> <span class="punc">{</span> <span class="prop">background</span><span class="punc">:</span> <span class="val">red</span><span class="punc">;</span> <span class="punc">}</span>
+
+<span class="cmt">/* چند پراپرتی با کاما */</span>
+<span class="prop">transition</span><span class="punc">:</span> <span class="prop">color</span> <span class="unit">.2s</span><span class="punc">,</span> <span class="prop">transform</span> <span class="unit">.3s</span><span class="punc">;</span>
+<span class="cmt">/* همه پراپرتی‌ها */</span>
+<span class="prop">transition</span><span class="punc">:</span> <span class="val">all</span> <span class="unit">.3s</span> <span class="val">ease</span><span class="punc">;</span></code></pre></div>
+
+      <h3>توابع زمان‌بندی (Timing Functions)</h3>
+      <table class="ref-table ltr">
+        <tr><td class="mono">ease</td><td>پیش‌فرض — شروع و پایان نرم</td></tr>
+        <tr><td class="mono">linear</td><td>سرعت ثابت</td></tr>
+        <tr><td class="mono">ease-in</td><td>شروع کند</td></tr>
+        <tr><td class="mono">ease-out</td><td>پایان کند</td></tr>
+        <tr><td class="mono">ease-in-out</td><td>هر دو نرم</td></tr>
+        <tr><td class="mono">cubic-bezier(...)</td><td>منحنی سفارشی</td></tr>
+        <tr><td class="mono">steps(n)</td><td>پله‌ای (برای انیمیشن فریم‌به‌فریم)</td></tr>
+      </table>
+
+      <div class="live-demo"><span class="live-label">transition زنده — hover کن ↓</span>
+        <button style="padding:12px 28px;border:none;border-radius:10px;background:#22d3ee;color:#03101a;font-weight:700;font-size:1rem;cursor:pointer;transition:all .35s cubic-bezier(.2,.8,.2,1);" onmouseover="this.style.background='#f472b6';this.style.transform='translateY(-6px) scale(1.08)';this.style.boxShadow='0 12px 28px rgba(244,114,182,.5)'" onmouseout="this.style.background='#22d3ee';this.style.transform='none';this.style.boxShadow='none'">من را hover کن</button>
+      </div>
+      <div class="box box-warn"><div class="box-title">⚠️ نکته عملکرد</div><p>برای انیمیشن نرم و بدون لگ، فقط <span class="kw">transform</span> و <span class="kw">opacity</span> را انیمیت کن. انیمیت کردن <span class="kw">width</span>، <span class="kw">height</span> یا <span class="kw">margin</span> باعث محاسبه دوباره چیدمان (reflow) و کندی می‌شود.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۲۰: Animation ════════ -->
+    <section class="chapter" id="animation">
+      <div class="chapter-header">
+        <span class="chapter-badge">۲۰</span>
+        <div>
+          <h2>Animation — انیمیشن با @keyframes</h2>
+          <span class="sub">حرکت‌های پیچیده و تکرارشونده بدون JavaScript</span>
+        </div>
+      </div>
+
+      <p>اگر transition فقط بین دو حالت است، animation به تو اجازه می‌دهد <b>چند مرحله</b> تعریف کنی و حرکت‌های پیچیده، تکرارشونده و خودکار بسازی.</p>
+
+      <h3>دو قدم: تعریف + اعمال</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* قدم ۱: تعریف مراحل */</span>
+<span class="atrule">@keyframes</span> <span class="func">bounce</span> <span class="punc">{</span>
+  <span class="val">0%</span>   <span class="punc">{</span> <span class="prop">transform</span><span class="punc">:</span> <span class="func">translateY(</span><span class="unit">0</span><span class="func">)</span><span class="punc">;</span> <span class="punc">}</span>
+  <span class="val">50%</span>  <span class="punc">{</span> <span class="prop">transform</span><span class="punc">:</span> <span class="func">translateY(</span><span class="unit">-30px</span><span class="func">)</span><span class="punc">;</span> <span class="punc">}</span>
+  <span class="val">100%</span> <span class="punc">{</span> <span class="prop">transform</span><span class="punc">:</span> <span class="func">translateY(</span><span class="unit">0</span><span class="func">)</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="punc">}</span>
+
+<span class="cmt">/* قدم ۲: اعمال به عنصر */</span>
+<span class="sel">.ball</span> <span class="punc">{</span>
+  <span class="cmt">/* نام | مدت | تابع | تأخیر | تکرار | جهت */</span>
+  <span class="prop">animation</span><span class="punc">:</span> <span class="val">bounce</span> <span class="unit">1s</span> <span class="val">ease-in-out</span> <span class="unit">0s</span> <span class="val">infinite</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <table class="ref-table ltr">
+        <tr><th>زیرپراپرتی</th><th>کاربرد</th></tr>
+        <tr><td class="mono">animation-name</td><td>نام @keyframes</td></tr>
+        <tr><td class="mono">animation-duration</td><td>مدت یک دور</td></tr>
+        <tr><td class="mono">animation-iteration-count</td><td>تعداد تکرار (یا infinite)</td></tr>
+        <tr><td class="mono">animation-direction</td><td>normal / reverse / alternate</td></tr>
+        <tr><td class="mono">animation-delay</td><td>تأخیر شروع</td></tr>
+        <tr><td class="mono">animation-fill-mode</td><td>forwards / backwards (حالت قبل/بعد)</td></tr>
+        <tr><td class="mono">animation-play-state</td><td>running / paused</td></tr>
+      </table>
+
+      <div class="live-demo"><span class="live-label">انیمیشن زنده ↓</span>
+        <style>
+          @keyframes demoBounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-24px);} }
+          @keyframes demoSpin { to { transform: rotate(360deg); } }
+          @keyframes demoPulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.25);opacity:.6;} }
+          .anim-bounce { animation: demoBounce 1.2s ease-in-out infinite; }
+          .anim-spin { animation: demoSpin 2s linear infinite; }
+          .anim-pulse { animation: demoPulse 1.5s ease-in-out infinite; }
+        </style>
+        <div class="demo-flex" style="padding:16px 0;align-items:center;">
+          <div class="demo-box dc1 anim-bounce" style="width:70px;height:70px;line-height:70px;padding:0;border-radius:12px;">bounce</div>
+          <div class="demo-box dc2 anim-spin" style="width:70px;height:70px;line-height:70px;padding:0;border-radius:12px;">spin</div>
+          <div class="demo-box dc3 anim-pulse" style="width:70px;height:70px;line-height:70px;padding:0;border-radius:50%;">pulse</div>
+        </div>
+      </div>
+      <div class="box box-tip"><div class="box-title">💡 from / to</div><p>اگر فقط دو مرحله داری، به‌جای <span class="kw">0%</span> و <span class="kw">100%</span> می‌توانی از کلیدواژه‌های <span class="kw">from</span> و <span class="kw">to</span> استفاده کنی.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۲۱: فیلتر ════════ -->
+    <section class="chapter" id="filter">
+      <div class="chapter-header">
+        <span class="chapter-badge">۲۱</span>
+        <div>
+          <h2>فیلتر و افکت‌های بصری</h2>
+          <span class="sub">filter، backdrop-filter، blend modes و clip-path</span>
+        </div>
+      </div>
+
+      <h3>filter — افکت روی عنصر</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="prop">filter</span><span class="punc">:</span> <span class="func">blur(</span><span class="unit">5px</span><span class="func">)</span><span class="punc">;</span>            <span class="cmt">/* تاری */</span>
+<span class="prop">filter</span><span class="punc">:</span> <span class="func">brightness(</span><span class="unit">1.5</span><span class="func">)</span><span class="punc">;</span>      <span class="cmt">/* روشنایی */</span>
+<span class="prop">filter</span><span class="punc">:</span> <span class="func">grayscale(</span><span class="unit">100%</span><span class="func">)</span><span class="punc">;</span>     <span class="cmt">/* سیاه‌وسفید */</span>
+<span class="prop">filter</span><span class="punc">:</span> <span class="func">drop-shadow(</span><span class="unit">0 4px 8px black</span><span class="func">)</span><span class="punc">;</span>
+<span class="cmt">/* چند فیلتر با هم: */</span>
+<span class="prop">filter</span><span class="punc">:</span> <span class="func">contrast(</span><span class="unit">1.2</span><span class="func">)</span> <span class="func">saturate(</span><span class="unit">1.5</span><span class="func">)</span> <span class="func">hue-rotate(</span><span class="unit">90deg</span><span class="func">)</span><span class="punc">;</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">فیلترهای زنده ↓</span>
+        <div class="demo-flex">
+          <div class="demo-box dc6" style="flex:1;filter:blur(2px);">blur</div>
+          <div class="demo-box dc6" style="flex:1;filter:grayscale(100%);">grayscale</div>
+          <div class="demo-box dc6" style="flex:1;filter:brightness(1.6);">bright</div>
+          <div class="demo-box dc6" style="flex:1;filter:hue-rotate(120deg);">hue</div>
+        </div>
+      </div>
+
+      <h3>backdrop-filter — افکت روی پشتِ عنصر (Glassmorphism)</h3>
+      <p>پشتِ یک عنصر شفاف را تار می‌کند — همان افکت «شیشه‌ای» محبوب که در همین صفحه هم استفاده شده!</p>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.glass</span> <span class="punc">{</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="func">rgba(</span><span class="unit">255,255,255,.1</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">backdrop-filter</span><span class="punc">:</span> <span class="func">blur(</span><span class="unit">12px</span><span class="func">)</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <h3>clip-path — برش شکل</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="prop">clip-path</span><span class="punc">:</span> <span class="func">circle(</span><span class="unit">50%</span><span class="func">)</span><span class="punc">;</span>
+<span class="prop">clip-path</span><span class="punc">:</span> <span class="func">polygon(</span><span class="unit">50% 0, 100% 100%, 0 100%</span><span class="func">)</span><span class="punc">;</span> <span class="cmt">/* مثلث */</span></code></pre></div>
+      <div class="live-demo"><span class="live-label">clip-path زنده ↓</span>
+        <div class="demo-flex" style="align-items:center;">
+          <div class="demo-box dc2" style="width:90px;height:90px;padding:0;clip-path:circle(50%);"></div>
+          <div class="demo-box dc3" style="width:90px;height:90px;padding:0;clip-path:polygon(50% 0,100% 100%,0 100%);"></div>
+          <div class="demo-box dc5" style="width:90px;height:90px;padding:0;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%);"></div>
+        </div>
+      </div>
+      <div class="box box-note"><div class="box-title">📌 mix-blend-mode</div><p>پراپرتی <span class="kw">mix-blend-mode</span> (مثل <span class="kw">multiply</span>، <span class="kw">screen</span>، <span class="kw">overlay</span>) نحوه‌ی ترکیب رنگ عنصر با لایه‌های زیرش را تعیین می‌کند — درست مثل لایه‌ها در فتوشاپ.</p></div>
+    </section>
+
+
+    <!-- ════════ فصل ۲۲: متغیرها ════════ -->
+    <section class="chapter" id="variables">
+      <div class="chapter-header">
+        <span class="chapter-badge">۲۲</span>
+        <div>
+          <h2>متغیرهای CSS (Custom Properties)</h2>
+          <span class="sub">مقادیر را یک‌بار تعریف کن، همه‌جا استفاده کن</span>
+        </div>
+      </div>
+
+      <p>متغیرهای CSS (که رسماً Custom Properties نام دارند) به تو اجازه می‌دهند یک مقدار را در یک‌جا ذخیره کنی و در کل صفحه ازش استفاده کنی. تغییر در یک نقطه = تغییر همه‌جا. ستون فقرات سیستم‌های طراحی و تم‌سازی.</p>
+
+      <h3>تعریف و استفاده</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* تعریف (معمولاً در :root برای دسترسی سراسری) */</span>
+<span class="sel">:root</span> <span class="punc">{</span>
+  <span class="prop">--main-color</span><span class="punc">:</span> <span class="val">#22d3ee</span><span class="punc">;</span>
+  <span class="prop">--spacing</span><span class="punc">:</span> <span class="unit">16px</span><span class="punc">;</span>
+  <span class="prop">--radius</span><span class="punc">:</span> <span class="unit">12px</span><span class="punc">;</span>
+<span class="punc">}</span>
+
+<span class="cmt">/* استفاده با تابع var() */</span>
+<span class="sel">.btn</span> <span class="punc">{</span>
+  <span class="prop">background</span><span class="punc">:</span> <span class="func">var(</span><span class="prop">--main-color</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">padding</span><span class="punc">:</span> <span class="func">var(</span><span class="prop">--spacing</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">border-radius</span><span class="punc">:</span> <span class="func">var(</span><span class="prop">--radius</span><span class="func">)</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <div class="box box-note"><div class="box-title">📌 :root چیست؟</div><p><span class="kw">:root</span> همان عنصر <span class="kw">&lt;html&gt;</span> است اما با اولویت بالاتر. متغیرهای تعریف‌شده در آن، در کل سند قابل دسترسند.</p></div>
+
+      <h3>مقدار پیش‌فرض و ارث‌بری</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* اگر متغیر تعریف نشده باشد، مقدار دوم استفاده می‌شود */</span>
+<span class="prop">color</span><span class="punc">:</span> <span class="func">var(</span><span class="prop">--text-color</span><span class="punc">,</span> <span class="val">black</span><span class="func">)</span><span class="punc">;</span>
+
+<span class="cmt">/* متغیرها ارث می‌رسند — می‌توانی محلی بازنویسی کنی */</span>
+<span class="sel">.card</span> <span class="punc">{</span> <span class="prop">--main-color</span><span class="punc">:</span> <span class="val">tomato</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="cmt">/* حالا داخل .card رنگ tomato است */</span></code></pre></div>
+
+      <h3>تغییر تم با یک خط (همان دکمه‌ی این صفحه!)</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">:root</span> <span class="punc">{</span> <span class="prop">--bg</span><span class="punc">:</span> <span class="val">#0a0e1a</span><span class="punc">;</span> <span class="prop">--text</span><span class="punc">:</span> <span class="val">white</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">html[data-theme="light"]</span> <span class="punc">{</span> <span class="prop">--bg</span><span class="punc">:</span> <span class="val">white</span><span class="punc">;</span> <span class="prop">--text</span><span class="punc">:</span> <span class="val">black</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="sel">body</span> <span class="punc">{</span> <span class="prop">background</span><span class="punc">:</span> <span class="func">var(</span><span class="prop">--bg</span><span class="func">)</span><span class="punc">;</span> <span class="prop">color</span><span class="punc">:</span> <span class="func">var(</span><span class="prop">--text</span><span class="func">)</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="cmt">/* فقط با JS صفت data-theme را عوض کن — کل تم تغییر می‌کند! */</span></code></pre></div>
+      <div class="box box-tip"><div class="box-title">💡 تفاوت با متغیرهای Sass</div><p>متغیرهای CSS <b>زنده</b> هستند: در مرورگر و با JavaScript قابل تغییرند. اما متغیرهای Sass/Less هنگام کامپایل ثابت می‌شوند. این مزیت بزرگ CSS Variables است.</p></div>
+    </section>
+
+    <!-- ════════ فصل ۲۳: توابع ════════ -->
+    <section class="chapter" id="functions">
+      <div class="chapter-header">
+        <span class="chapter-badge">۲۳</span>
+        <div>
+          <h2>توابع کاربردی CSS</h2>
+          <span class="sub">calc، clamp، min، max و دوستان</span>
+        </div>
+      </div>
+
+      <p>CSS توابعی دارد که محاسبات ریاضی و تصمیم‌گیری پویا را ممکن می‌کنند — قدرتی که قبلاً فقط با JavaScript ممکن بود.</p>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">calc()</span><span class="tag-pill pill-func">تابع</span><span class="tag-desc-head">محاسبات ریاضی، حتی با واحدهای مختلف</span></div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="prop">width</span><span class="punc">:</span> <span class="func">calc(</span><span class="unit">100% - 40px</span><span class="func">)</span><span class="punc">;</span>  <span class="cmt">/* ترکیب درصد و پیکسل! */</span>
+<span class="prop">height</span><span class="punc">:</span> <span class="func">calc(</span><span class="unit">100vh - 60px</span><span class="func">)</span><span class="punc">;</span>
+<span class="prop">font-size</span><span class="punc">:</span> <span class="func">calc(</span><span class="unit">1rem + 1vw</span><span class="func">)</span><span class="punc">;</span></code></pre></div>
+          <div class="box box-warn"><div class="box-title">⚠️ فاصله مهم است</div><p>دور علامت‌های <span class="kw">+</span> و <span class="kw">-</span> حتماً فاصله بگذار: <span class="kw">calc(100% - 10px)</span> درست، اما <span class="kw">calc(100%-10px)</span> غلط است!</p></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">min() / max()</span><span class="tag-pill pill-func">تابع</span><span class="tag-desc-head">کوچک‌ترین/بزرگ‌ترین مقدار را انتخاب کن</span></div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="prop">width</span><span class="punc">:</span> <span class="func">min(</span><span class="unit">90%, 1200px</span><span class="func">)</span><span class="punc">;</span> <span class="cmt">/* هرکدام کوچک‌تر بود */</span>
+<span class="prop">padding</span><span class="punc">:</span> <span class="func">max(</span><span class="unit">20px, 5%</span><span class="func">)</span><span class="punc">;</span> <span class="cmt">/* هرگز کمتر از 20px */</span></code></pre></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">clamp()</span><span class="tag-pill pill-func">تابع</span><span class="tag-desc-head">قهرمان طراحی سیال (Fluid)</span></div>
+        <div class="tag-card-body">
+          <p>سه مقدار می‌گیرد: <b>حداقل، ایده‌آل، حداکثر</b>. مقدار بین دو حد، سیال تغییر می‌کند. عالی برای فونت ریسپانسیو بدون media query.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* clamp(حداقل, ایده‌آل, حداکثر) */</span>
+<span class="prop">font-size</span><span class="punc">:</span> <span class="func">clamp(</span><span class="unit">1rem, 2vw + 1rem, 3rem</span><span class="func">)</span><span class="punc">;</span>
+<span class="prop">width</span><span class="punc">:</span> <span class="func">clamp(</span><span class="unit">300px, 80%, 1200px</span><span class="func">)</span><span class="punc">;</span></code></pre></div>
+        </div>
+      </div>
+
+      <table class="ref-table ltr">
+        <tr><th>تابع</th><th>کاربرد</th></tr>
+        <tr><td class="mono">var()</td><td>خواندن متغیر CSS</td></tr>
+        <tr><td class="mono">url()</td><td>آدرس تصویر/فونت/فایل</td></tr>
+        <tr><td class="mono">attr()</td><td>خواندن مقدار صفت HTML</td></tr>
+        <tr><td class="mono">rgb()/hsl()/oklch()</td><td>توابع رنگ</td></tr>
+        <tr><td class="mono">linear-gradient()</td><td>گرادیان</td></tr>
+        <tr><td class="mono">translate()/rotate()/scale()</td><td>تبدیل‌ها</td></tr>
+        <tr><td class="mono">repeat()/minmax()</td><td>توابع Grid</td></tr>
+        <tr><td class="mono">env()</td><td>متغیرهای محیطی (notch موبایل)</td></tr>
+      </table>
+    </section>
+
+    <!-- ════════ فصل ۲۴: ویژگی‌های نوین ════════ -->
+    <section class="chapter" id="modern">
+      <div class="chapter-header">
+        <span class="chapter-badge">۲۴</span>
+        <div>
+          <h2>ویژگی‌های نوین و آینده CSS</h2>
+          <span class="sub">جدیدترین قابلیت‌هایی که CSS را متحول کرده‌اند</span>
+        </div>
+      </div>
+
+      <p>CSS مدرن دیگر زبان ساده‌ی استایل نیست؛ قابلیت‌هایی دارد که قبلاً به JavaScript نیاز داشتند. این‌ها جدیدترین‌ها هستند.</p>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">:has() — والد سلکتور</span><span class="tag-pill pill-new">نوین</span><span class="tag-desc-head">انتخاب والد بر اساس فرزند!</span></div>
+        <div class="tag-card-body">
+          <p>سال‌ها آرزوی توسعه‌دهندگان بود: انتخاب یک عنصر بر اساس آنچه <b>داخلش</b> است.</p>
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="cmt">/* کارتی که داخلش عکس دارد */</span>
+<span class="sel">.card:has(img)</span> <span class="punc">{</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="cmt">/* فرمی که input نامعتبر دارد */</span>
+<span class="sel">form:has(:invalid)</span> <span class="punc">{</span> <span class="prop">border</span><span class="punc">:</span> <span class="unit">2px</span> <span class="val">solid red</span><span class="punc">;</span> <span class="punc">}</span></code></pre></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">@container — کوئری کانتینر</span><span class="tag-pill pill-new">نوین</span><span class="tag-desc-head">واکنش به اندازه والد، نه کل صفحه</span></div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.sidebar</span> <span class="punc">{</span> <span class="prop">container-type</span><span class="punc">:</span> <span class="val">inline-size</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="atrule">@container</span> <span class="punc">(</span><span class="prop">min-width</span><span class="punc">:</span> <span class="unit">400px</span><span class="punc">)</span> <span class="punc">{</span>
+  <span class="sel">.card</span> <span class="punc">{</span> <span class="prop">display</span><span class="punc">:</span> <span class="val">flex</span><span class="punc">;</span> <span class="punc">}</span>
+<span class="punc">}</span></code></pre></div>
+        </div>
+      </div>
+
+      <div class="tag-card">
+        <div class="tag-card-head"><span class="tag-name">aspect-ratio</span><span class="tag-pill pill-new">نوین</span><span class="tag-desc-head">نسبت ابعاد ثابت</span></div>
+        <div class="tag-card-body">
+          <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS</span></div>
+<pre><code><span class="sel">.video</span> <span class="punc">{</span> <span class="prop">aspect-ratio</span><span class="punc">:</span> <span class="unit">16 / 9</span><span class="punc">;</span> <span class="punc">}</span> <span class="cmt">/* همیشه نسبت 16:9 */</span>
+<span class="sel">.square</span> <span class="punc">{</span> <span class="prop">aspect-ratio</span><span class="punc">:</span> <span class="unit">1</span><span class="punc">;</span> <span class="punc">}</span>      <span class="cmt">/* مربع کامل */</span></code></pre></div>
+        </div>
+      </div>
+
+      <table class="ref-table ltr">
+        <tr><th>ویژگی</th><th>کاربرد</th></tr>
+        <tr><td class="mono">gap (در flex)</td><td>فاصله آیتم‌های flex (بدون margin)</td></tr>
+        <tr><td class="mono">inset</td><td>شورت‌هند top/right/bottom/left</td></tr>
+        <tr><td class="mono">scroll-snap</td><td>اسکرول چفت‌شونده (اسلایدر)</td></tr>
+        <tr><td class="mono">accent-color</td><td>رنگ چک‌باکس/رادیو</td></tr>
+        <tr><td class="mono">:is() / :where()</td><td>گروه‌بندی سلکتورها</td></tr>
+        <tr><td class="mono">@layer</td><td>مدیریت لایه‌های اولویت (Cascade Layers)</td></tr>
+        <tr><td class="mono">subgrid</td><td>به ارث بردن گرید والد</td></tr>
+        <tr><td class="mono">color-mix()</td><td>ترکیب دو رنگ</td></tr>
+        <tr><td class="mono">@property</td><td>تعریف نوع‌دار متغیر (انیمیشن متغیر)</td></tr>
+        <tr><td class="mono">view-transition</td><td>انتقال نرم بین صفحات</td></tr>
+      </table>
+
+      <div class="box box-future">
+        <div class="box-title">🔮 آینده هیجان‌انگیز است</div>
+        <p>CSS هر روز قدرتمندتر می‌شود. ویژگی‌هایی مثل تو‌درتویی بومی (Nesting)، توابع رنگ پیشرفته و انیمیشن‌های اسکرول‌محور (scroll-driven) در حال فراگیر شدن‌اند. همیشه <a href="https://developer.mozilla.org/" target="_blank" rel="noopener">MDN</a> و <a href="https://caniuse.com/" target="_blank" rel="noopener">Can I Use</a> را چک کن.</p>
+      </div>
+    </section>
+
+    <!-- ════════ مرجع سریع ════════ -->
+    <section class="chapter" id="reference">
+      <div class="chapter-header">
+        <span class="chapter-badge">📚</span>
+        <div>
+          <h2>مرجع سریع و تقلب‌نامه</h2>
+          <span class="sub">پرکاربردترین پراپرتی‌ها در یک نگاه</span>
+        </div>
+      </div>
+
+      <h3>الگوهای پرتکرار (Snippets طلایی)</h3>
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — ریست استاندارد</span></div>
+<pre><code><span class="sel">*</span><span class="punc">,</span> <span class="sel">*::before</span><span class="punc">,</span> <span class="sel">*::after</span> <span class="punc">{</span>
+  <span class="prop">margin</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="prop">padding</span><span class="punc">:</span> <span class="unit">0</span><span class="punc">;</span> <span class="prop">box-sizing</span><span class="punc">:</span> <span class="val">border-box</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — وسط‌چین کامل</span></div>
+<pre><code><span class="sel">.center</span> <span class="punc">{</span>
+  <span class="prop">display</span><span class="punc">:</span> <span class="val">grid</span><span class="punc">;</span>
+  <span class="prop">place-items</span><span class="punc">:</span> <span class="val">center</span><span class="punc">;</span> <span class="cmt">/* کوتاه‌ترین راه وسط‌چینی! */</span>
+<span class="punc">}</span></code></pre></div>
+
+      <div class="code-block"><div class="code-head"><div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div><span class="code-lang">CSS — کانتینر مرکزی ریسپانسیو</span></div>
+<pre><code><span class="sel">.container</span> <span class="punc">{</span>
+  <span class="prop">width</span><span class="punc">:</span> <span class="func">min(</span><span class="unit">90%, 1200px</span><span class="func">)</span><span class="punc">;</span>
+  <span class="prop">margin-inline</span><span class="punc">:</span> <span class="val">auto</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre></div>
+
+      <h3>جدول جامع پراپرتی‌ها</h3>
+      <table class="ref-table ltr">
+        <tr><th>دسته</th><th>پراپرتی‌های کلیدی</th></tr>
+        <tr><td>متن</td><td class="mono">color, font, line-height, text-align, text-decoration</td></tr>
+        <tr><td>جعبه</td><td class="mono">width, height, padding, margin, border, box-sizing</td></tr>
+        <tr><td>پس‌زمینه</td><td class="mono">background, background-image, background-size</td></tr>
+        <tr><td>چیدمان</td><td class="mono">display, position, float, flex, grid, gap</td></tr>
+        <tr><td>flex</td><td class="mono">justify-content, align-items, flex-direction, flex</td></tr>
+        <tr><td>grid</td><td class="mono">grid-template-columns, grid-area, repeat, minmax</td></tr>
+        <tr><td>افکت</td><td class="mono">opacity, box-shadow, filter, backdrop-filter, transform</td></tr>
+        <tr><td>حرکت</td><td class="mono">transition, animation, @keyframes</td></tr>
+        <tr><td>بصری</td><td class="mono">overflow, visibility, z-index, cursor, clip-path</td></tr>
+      </table>
+
+      <h3>مسیر یادگیری پیشنهادی</h3>
+      <ol>
+        <li><b>پایه:</b> سینتکس → سلکتورها → باکس مدل → رنگ و متن</li>
+        <li><b>چیدمان:</b> display → position → Flexbox → Grid</li>
+        <li><b>ریسپانسیو:</b> واحدها → media queries → clamp و توابع</li>
+        <li><b>تعامل:</b> transition → transform → animation</li>
+        <li><b>حرفه‌ای:</b> متغیرها → ویژگی‌های نوین (:has, @container)</li>
+        <li><b>قدم بعد:</b> یک کتابخانه (مثل Tailwind) یا پیش‌پردازنده (Sass)</li>
+      </ol>
+
+      <div class="box box-tip">
+        <div class="box-title">💡 مهم‌ترین توصیه پایانی</div>
+        <p>CSS با <b>تمرین</b> یاد گرفته می‌شود، نه فقط خواندن. هر مفهومی را که اینجا دیدی، در یک فایل واقعی امتحان کن. ابزار <a href="https://codepen.io/" target="_blank" rel="noopener">CodePen</a> برای تمرین سریع عالی است. اشتباه کن، خراب کن، دوباره بساز — این بهترین معلم است.</p>
+      </div>
+
+      <div class="box box-note">
+        <div class="box-title">📌 منابع رسمی برای ادامه</div>
+        <ul style="margin-top:8px;">
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener">MDN Web Docs</a> — مرجع کامل و رسمی هر پراپرتی</li>
+          <li><a href="https://caniuse.com/" target="_blank" rel="noopener">Can I Use</a> — پشتیبانی مرورگرها</li>
+          <li><a href="https://css-tricks.com/" target="_blank" rel="noopener">CSS-Tricks</a> — راهنماها و ترفندها</li>
+        </ul>
+      </div>
+    </section>
+
+
+
+
+    <!-- ════════ فوتر ════════ -->
+    <footer class="footer">
+      <div class="signoff">
+        <div class="signoff-glow"></div>
+        <h3>سفر تو تازه شروع شده ✨</h3>
+        <p>حالا که HTML اسکلت را می‌سازد و CSS لباس زیبا را می‌پوشاند، قدم بعدی JavaScript است تا همه چیز را زنده کنی. این دایره‌المعارف را هر وقت خواستی باز کن و مرور کن — همیشه آفلاین و در دسترس توست.</p>
+        <div class="signoff-author">
+          <span class="signoff-label">طراحی و نگارش</span>
+          <span class="signoff-name">صدرا حاتمی | Sadra Hatami</span>
+        </div>
+      </div>
+      <p class="sig" style="margin-top:30px;">طراحی شده با ❤️ برای جامعه برنامه نویسان ایران و جهان از طرف  — <b>صدرا حاتمی</b></p>
+    </footer>
+  </main>
+</div>
+
+<button class="to-top" id="toTop" aria-label="بازگشت به بالا">↑</button>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ════════ ذرات شناور پس‌زمینه ════════ */
+  function createParticles() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const count = window.innerWidth < 768 ? 12 : 24;
+    const colors = ['#22d3ee', '#a78bfa', '#f472b6', '#60a5fa'];
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 4 + 2;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.color = colors[Math.floor(Math.random() * colors.length)];
+      p.style.background = p.style.color;
+      p.style.animationDuration = (Math.random() * 15 + 12) + 's';
+      p.style.animationDelay = (Math.random() * -20) + 's';
+      document.body.appendChild(p);
+    }
+  }
+  createParticles();
+
+  /* ════════ منوی موبایل ════════ */
+  const sidebar = document.getElementById('sidebar');
+  const menuToggle = document.getElementById('menuToggle');
+  const overlay = document.getElementById('overlay');
+
+  function openMenu() { sidebar.classList.add('open'); overlay.classList.add('show'); }
+  function closeMenu() { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+
+  menuToggle.addEventListener('click', function () {
+    sidebar.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+
+  /* بستن منو هنگام کلیک روی لینک (موبایل) */
+  document.querySelectorAll('.nav-link').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (window.innerWidth <= 1024) closeMenu();
+    });
+  });
+
+  /* ════════ تغییر تم روشن/تاریک ════════ */
+  const themeToggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  let saved = null;
+  try { saved = localStorage.getItem('css-enc-theme'); } catch (e) {}
+  if (saved === 'light') { root.setAttribute('data-theme', 'light'); themeToggle.textContent = '☀️'; }
+
+  themeToggle.addEventListener('click', function () {
+    const isLight = root.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      root.removeAttribute('data-theme');
+      themeToggle.textContent = '🌙';
+      try { localStorage.setItem('css-enc-theme', 'dark'); } catch (e) {}
+    } else {
+      root.setAttribute('data-theme', 'light');
+      themeToggle.textContent = '☀️';
+      try { localStorage.setItem('css-enc-theme', 'light'); } catch (e) {}
+    }
+  });
+
+  /* ════════ نوار پیشرفت اسکرول ════════ */
+  const progressBar = document.getElementById('progressBar');
+  const toTop = document.getElementById('toTop');
+
+  function onScroll() {
+    const h = document.documentElement;
+    const scrollTop = h.scrollTop || document.body.scrollTop;
+    const height = h.scrollHeight - h.clientHeight;
+    const pct = height > 0 ? (scrollTop / height) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    if (scrollTop > 400) { toTop.classList.add('show'); }
+    else { toTop.classList.remove('show'); }
+    updateActiveLink();
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ════════ لینک فعال در ناوبری ════════ */
+  const chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
+  const navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
+
+  function updateActiveLink() {
+    let currentId = '';
+    const offset = 120;
+    for (let i = 0; i < chapters.length; i++) {
+      const rect = chapters[i].getBoundingClientRect();
+      if (rect.top <= offset) currentId = chapters[i].id;
+    }
+    navLinks.forEach(function (link) {
+      const href = link.getAttribute('href');
+      if (href === '#' + currentId) link.classList.add('active');
+      else link.classList.remove('active');
+    });
+  }
+
+  /* ════════ ظاهر شدن فصل‌ها هنگام اسکرول ════════ */
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    chapters.forEach(function (ch) { observer.observe(ch); });
+  } else {
+    chapters.forEach(function (ch) { ch.classList.add('visible'); });
+  }
+
+  /* ════════ دکمه کپی کد ════════ */
+  document.querySelectorAll('.code-head').forEach(function (head) {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'کپی';
+    btn.setAttribute('aria-label', 'کپی کد');
+    head.appendChild(btn);
+    btn.addEventListener('click', function () {
+      const block = head.parentElement;
+      const code = block.querySelector('pre') ? block.querySelector('pre').innerText : '';
+      const done = function () {
+        btn.textContent = '✓ کپی شد';
+        btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = 'کپی'; btn.classList.remove('copied'); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done).catch(function () { fallbackCopy(code, done); });
+      } else { fallbackCopy(code, done); }
+    });
+  });
+
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    cb();
+  }
+
+  /* ════════ جستجو ════════ */
+  const searchInput = document.getElementById('searchInput');
+  const searchCount = document.getElementById('searchCount');
+
+  // ساخت پیام «نتیجه‌ای یافت نشد»
+  const main = document.querySelector('.main');
+  const noResults = document.createElement('div');
+  noResults.className = 'no-results';
+  noResults.innerHTML = '🔍 نتیجه‌ای برای جستجوی شما پیدا نشد. کلمه دیگری را امتحان کنید.';
+  main.appendChild(noResults);
+
+  function clearHighlights() {
+    document.querySelectorAll('mark.hl').forEach(function (m) {
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+
+  let searchTimer = null;
+  searchInput.addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(runSearch, 180);
+  });
+
+  function runSearch() {
+    const term = searchInput.value.trim().toLowerCase();
+    clearHighlights();
+
+    if (!term) {
+      chapters.forEach(function (ch) { ch.classList.remove('search-hidden'); });
+      searchCount.style.display = 'none';
+      noResults.style.display = 'none';
+      return;
+    }
+
+    let matchCount = 0;
+    chapters.forEach(function (ch) {
+      const text = ch.textContent.toLowerCase();
+      if (text.indexOf(term) !== -1) {
+        ch.classList.remove('search-hidden');
+        matchCount++;
+      } else {
+        ch.classList.add('search-hidden');
+      }
+    });
+
+    searchCount.style.display = 'block';
+    searchCount.textContent = matchCount + ' فصل مرتبط پیدا شد';
+    noResults.style.display = matchCount === 0 ? 'block' : 'none';
+  }
+
+  /* ════════ کلید میانبر / برای فوکوس روی جستجو ════════ */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      runSearch();
+      searchInput.blur();
+    }
+  });
+
+  /* اجرای اولیه */
+  onScroll();
+})();
+</script>
+
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
