@@ -100,7 +100,6 @@ https://sadra-hatami.github.io/CSS-Encyclopedia-Website/
 
 🌐 [GitHub](https://github.com/sadra-hatami)
 
-
 ---
 
 # 📄 License
