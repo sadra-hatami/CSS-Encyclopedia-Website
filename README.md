@@ -93,7 +93,7 @@ https://sadra-hatami.github.io/CSS-Encyclopedia-Website/
 
 **Developer:**
 
-**Sadra Hatami**
+## Sadra Hatami
 
 📧 [Email](mailto:sadra.hatami.1732@gmail.com)
 
